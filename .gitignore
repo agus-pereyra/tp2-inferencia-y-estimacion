@@ -1,0 +1,5 @@
+# Temps de LaTeX
+/report/*
+!/report/*.tex
+!/report/*.pdf
+
