@@ -2,6 +2,7 @@
 /report/*
 !/report/*.tex
 !/report/*.pdf
+!/report/figures/
 
 # Python Caché
 __pycache__/
