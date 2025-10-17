@@ -3,3 +3,5 @@
 !/report/*.tex
 !/report/*.pdf
 
+# Python Caché
+__pycache__/
