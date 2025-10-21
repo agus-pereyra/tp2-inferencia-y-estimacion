@@ -49,6 +49,8 @@
 
 \section*{Abstract}
 
+En la era del \textbf{Big Data}, obtener capacidad de representar información de manera concisa y compacta es un desafío fundamental. La \textit{Teoría de la Información}, la cual comenzó \textbf{Claude Shannon}, postula que la compresibilidad de cualquier dato está intrínsecamente limitada por su contenido de incertidumbre, esta medida es cuantificable, y es conocida como \textit{entropía}. En este presente trabajo se aborda experimentalmente este principio, investigando cómo se desempeña en la práctica el algoritmo de \textbf{Codificación de Huffman}, donde se investiga cómo la capacidad predictiva de una fuente determina su potencial compresión, esto se hace mediante el análisis de textos con propiedades probabilísticas radicalmente diferentes (lenguaje natural, datos estructurados y secuencias genómicas), además de demostrarse empíricamente la optimalidad de este método. Los resultados cuantifican la eficiencia del algoritmo, que minimiza la longitud de codificación promedio ... (continuar)
+
 \vspace{10pt}
 
 \noindent\hrule
@@ -60,7 +62,56 @@
 
 \section{Desarrollo Experimental}
 
+    
+
     \begin{multicols}{2}
+
+    \subsection{Estimación del Modelo probabilístico de la Fuente}
+
+        El primer paso en la implementación de la \textbf{codificación de Huffman} es estimar el modelo probabilístico de la fuente. Esto se logra mediante el análisis de la frecuencia de aparición de cada símbolo en el conjunto de datos. La probabilidad \( p_i \) de cada símbolo \( s_i \) se calcula como, donde cada caracter es una realización de la variable aleatoria fuente \( S \):
+
+        \begin{equation}
+            p_i = \frac{f_i}{\sum_{j=1}^{N} f_j}
+            \label{eq:prob}
+        \end{equation}
+
+        El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este diccionario constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}.
+
+    \subsection{Codificación de Huffman}
+
+    \subsection{Construcción del Árbol de Huffman}
+
+        
+
+    \subsection{Medidas de Desempeño y Análisis Cuantitativo}
+
+        \subsubsection*{Longitud Promedio de Codificación (L):}
+
+            \begin{equation}
+                L = \sum_{i=1}^{N} p_i l_i
+                \label{eq:avg_length}
+            \end{equation}
+
+        \subsubsection*{Comparación con la Codificación Uniforme}
+
+            \begin{equation}
+                L_{\text{unif}} = \lceil \log_2 (N) \rceil
+                \label{eq:unif}
+            \end{equation}
+
+        \subsubsection*{Reducción de Memoria}
+
+            \begin{equation}
+                R = \left(1 - \frac{L}{L_{\text{unif}}}\right) \times 100\%
+                \label{eq:reduction}
+            \end{equation}
+
+        \subsubsection*{Compresibilidad de la Fuente (Entropia Normalizada, $\eta$)}
+        
+            \begin{equation}
+                \eta = \frac{H(S)}{log_2(N)}
+                \label{eq:entropia_normalizada}
+            \end{equation}
 
     \end{multicols}
 
