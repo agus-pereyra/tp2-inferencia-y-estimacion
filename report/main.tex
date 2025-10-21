@@ -49,7 +49,7 @@
 
 \section*{Abstract}
 
-En la era del \textbf{Big Data}, obtener capacidad de representar información de manera concisa y compacta es un desafío fundamental. La \textit{Teoría de la Información}, la cual comenzó \textbf{Claude Shannon}, postula que la compresibilidad de cualquier dato está intrínsecamente limitada por su contenido de incertidumbre, esta medida es cuantificable, y es conocida como \textit{entropía}. En este presente trabajo se aborda experimentalmente este principio, investigando cómo se desempeña en la práctica el algoritmo de \textbf{Codificación de Huffman}, donde se investiga cómo la capacidad predictiva de una fuente determina su potencial compresión, esto se hace mediante el análisis de textos con propiedades probabilísticas radicalmente diferentes (lenguaje natural, datos estructurados y secuencias genómicas), además de demostrarse empíricamente la optimalidad de este método. Los resultados cuantifican la eficiencia del algoritmo, que minimiza la longitud de codificación promedio ... (continuar)
+En la era del \textbf{Big Data}, obtener capacidad de representar información de manera concisa y compacta es un desafío fundamental. La \textit{Teoría de la Información}, la cual comenzó \textbf{Claude Shannon}, postula que la compresibilidad de cualquier dato está intrínsecamente limitada por su contenido de incertidumbre, esta medida es cuantificable, y es conocida como \textit{entropía}. En este presente trabajo se aborda experimentalmente este principio, investigando cómo se desempeña en la práctica el algoritmo de \textbf{Codificación de Huffman}, donde se investiga cómo la capacidad predictiva de una fuente determina su potencial compresión, esto se hace mediante el análisis de textos con propiedades de ocurrencia de caracteres radicalmente diferentes (lenguaje natural, datos estructurados y secuencias genómicas), además de demostrarse empíricamente la optimalidad de este método. Los resultados cuantifican la eficiencia del algoritmo, que minimiza la longitud de codificación promedio \dots (\textbf{Aca van el resto de los resultados})
 
 \vspace{10pt}
 
@@ -68,14 +68,17 @@ En la era del \textbf{Big Data}, obtener capacidad de representar información d
 
     \subsection{Estimación del Modelo probabilístico de la Fuente}
 
-        El primer paso en la implementación de la \textbf{codificación de Huffman} es estimar el modelo probabilístico de la fuente. Esto se logra mediante el análisis de la frecuencia de aparición de cada símbolo en el conjunto de datos. La probabilidad \( p_i \) de cada símbolo \( s_i \) se calcula como, donde cada caracter es una realización de la variable aleatoria fuente \( S \):
+        El primer paso en la implementación de la \textbf{codificación de Huffman} es estimar el modelo probabilístico de la fuente (texto). Esto se logra mediante el análisis de la frecuencia de aparición de cada símbolo en el conjunto de datos. La probabilidad \( p_i \) de cada símbolo \( s_i \) se calcula como:
 
         \begin{equation}
             p_i = \frac{f_i}{\sum_{j=1}^{N} f_j}
             \label{eq:prob}
         \end{equation}
 
+        , donde cada caracter es una realización de la variable aleatoria fuente \( S \).
         El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este diccionario constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}.
+
+        Las caracteristicas de este resultado se basan en los \textbf{Aximas de la Probabilidad}, es decir, la suma de los $p_i$ es igual a 1, $\sum_{i=1}^N p_i = 1$, la probabilidad de un evento puntual es mayor a cero, $\mathbb{P}(p_i) \geq 0$, y si  $A \cap B = \varnothing \Rightarrow \mathbb{P(A \cup B)} = \mathbb{P(A)} + \mathbb{P(B)}$
 
     \subsection{Codificación de Huffman}
 
