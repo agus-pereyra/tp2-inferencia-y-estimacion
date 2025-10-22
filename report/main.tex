@@ -17,6 +17,7 @@
 \usepackage{algpseudocode}
 \algrenewcommand{\algorithmicrequire}{\textbf{Input:}}
 \algrenewcommand{\algorithmicensure}{\textbf{Output:}}
+\algrenewcommand{\alglinenumber}[1]{}
 
 \begin{document}
 
@@ -97,32 +98,36 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     La característica que diferencia este código de otros universales como el \textit{código Morse} es que ninguna cadena de código asignada a algún símbolo es prefijo de otra. A esta propiedad se la conoce como \textit{prefix-free} y es gracias a esto que su decodificación es inmediata.
 
-    El código se construye como un árbol binario, cuyas hojas representan un símbolo y a cada rama se le asocia a un elemento binario (generalmente a la rama izquierda el 0 y a la derecha el 1) y el algoritmo para construirlo es muy sencillo:
+    El código se construye como un árbol binario, cuyas hojas representan un símbolo y a cada rama un elemento binario. Los caracteres de menor frecuencia se encuentran en los mayores niveles de profundidad del árbol, lo que tiene sentido porque lo más frecuentes serán los más rápidos de decodificar y esto es justamente lo que buscamos.
 
-
+    \subsection{Construcción del Árbol de Huffman}
+    
     \begin{algorithm}[H]
+    \small
     \caption{HuffmanCoding}
         \begin{algorithmic}[1]
-            \Require PMF de los símbolos $s_i$ de la cadena $S$ 
-            \Ensure Códificación Hoffman para $S$
-            \State $Q \gets$ lista de tuplas $(symbol, p_i | subtree)$
-            \While{$Q$.size() > 1}
-                \State Ordenar $Q$ por $p_i$
-                \State $a, b \gets$ los 2 símbolos de $< p_i$
-                \State Agregar 0 y 1 a los prefijos de $a$ y $b$ respectivamente
-                \State Fusionar los subárboles
-                \State create node $c$ with children $a$ and $b$ and weight $a.\text{weight} + b.\text{weight}$
-                \State Q.push(c)
+            \Require$\mathbf{pmf} \ p(s)$ de los caracteres $s_i$ de la cadena $S$ 
+            \State$Q\gets$ priority-queue de nodos $n_i = \left< s_i, p(s_i)\right>$
+            \State{\color{gray} \# orden ascendente de $p$}
+            \While{len$(Q) > 1$}
+                \State$n_1 \gets Q\text{.pop}()$
+                \State$n_2 \gets Q\text{.pop}()$
+                \State$n_\text{padre} \gets  \left<n_1 | n_2, n_1.p + n_2.p \right>$
+                \State$Q.$enqueue($n_\text{padre}$)
             \EndWhile
-            \State \Return code obtained from the final tree
+            \State root $\gets Q$.pop()
+            \State\Return root
         \end{algorithmic}
     \end{algorithm}
 
-
-
-    \subsection{Construcción del Árbol de Huffman}
-
-        
+    Se añaden los símbolos de menor a mayor frecuencia en el árbol, creando subárboles de manera que la frecuencia del nodo padre es la suma de la frecuencia de sus hijos. De esta menera, iterativamente se van uniendo los subárboles dejando una estructura como la de la Figura \ref{fig:huffman_tree} Luego es tan simple como asignar a cada rama un valor binario y la codificación para cada símbolo es el camino que hay que hacer desde la raíz hasta la hoja que representa a ese símbolo. En el ejemplo de la figura: a = 0, b = 10, c = 110 y d = 111 
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.18\textwidth]{figures/huffman_tree.png}
+        \caption{Árbol de Huffman para la cadena $S=\text{abcdabcaba}$}
+        \label{fig:huffman_tree}
+    \end{figure}
 
     \subsection{Medidas de Desempeño y Análisis Cuantitativo}
 
