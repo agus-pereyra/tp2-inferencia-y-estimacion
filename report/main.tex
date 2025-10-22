@@ -166,9 +166,43 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
 \section{Análisis de Datos}
 
-    \begin{multicols}{2}
+ACA VAN LOS GRAFICOS DE BARRA
 
-    \end{multicols}
+\begin{multicols}{2}
+
+
+En los graficos se presentan las distribuciones de frecuencia de aparición de símbolos en tres archivos
+de texto distinto: adn.txt, mitologia.txt y tabla.txt. SI ESTO LO PONEN EN METODOLOGIA AVISEN
+
+En primer lugar, el archivo adn.txt muestra una distribucion completamente uniforme entre los cuatro
+simbolos que lo componen. Cada uno aparece con una frecuencia cercana al 25\% lo cual es coherente con la estructura de secuencia de un ADN.
+
+Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria
+deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el " " (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. (Capaz puede decir algo mas)
+
+Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de organizacion tipica de informacion numerica. 
+
+En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion
+
+
+AHORA VA LA TABLA. ACA MEDIO QUE REPTTO LO MISMO. ARREGLAR DESPUES
+
+En el caso del adn.txt, se observa un alfabeto muy reducido compuesto de solo 4 simbolos unicos con frecuencias identicas. Es debido a esto que el codigo de
+Huffman no puede lograr ninguna compresion adicional respecto al codigo binario uniforme. La longitud promedio resulta de 2 bits por simbolo siendo igual a la longitud uniforme minima y dando una reduccion de 0 \%. Esto confirma que cuando todos
+los simbolos tienen la misma probabilidad, Huffman no ofrece ventajas, ya que el codigo optimo coincide con el codigo de longitud fija.
+
+Por el contrario, en mitologia.txt la distribucion de frecuencia es muy desigual. Esto permite que Huffman asigne codigos mas cortos a simbolos frecuentes y mas largos a aquellos mas raros logrando una
+longitud promedio de 4.30 bits por simbolo, frente a una longitud uniforme minima de 6 bits. Consecuentemente, somos capaces de lograr una reduccion de memoria del 28.31 \%. Este resultado muestra la eficacia de este metodo para aprovechar la reduncancia estadistica para facilitar una codificacion eficiente.
+
+Finalmente, en tabla.txt vemos una disstribucion no uniforme dominada por numeros y signos de puntuacion. En este caso, el numero de simbolos unicos es similar al del texto de mitologia (PREGUNTAR A BOMBI SI LO TRUNCO), sin embargo vemos que la longitud promedio de Huffman es menor siendo de 3.52 bits por simbolo y una reduccion de memoria del 41.40\%. Esto indica 
+que el archivo contiene una mayor proporcion de repeticiones siendo mas compresible. 
+
+
+
+
+
+
+\end{multicols}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusión %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
