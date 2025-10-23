@@ -15,12 +15,16 @@
 \usepackage{float}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+
 \algrenewcommand{\algorithmicrequire}{\textbf{Input:}}
 \algrenewcommand{\algorithmicensure}{\textbf{Output:}}
 \algrenewcommand{\alglinenumber}[1]{}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes,positioning}
+
+\usepackage{booktabs}
+\usepackage{siunitx}
 
 \begin{document}
 
@@ -132,8 +136,10 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
         edgelabelleft/.style = {midway, above right=1.5pt, color=mustard},
         edgelabelright/.style = {midway, above left=1.5pt, color=lightpurple}
     }
+
     \definecolor{mustard}{HTML}{f08c00}
     \definecolor{lightpurple}{HTML}{9c36b5}
+
     \begin{figure}[H]
         \centering
         \begin{tikzpicture}
@@ -157,16 +163,19 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
             \node[nodelabel, below=-1pt of D] {b};
             \node[nodelabel, below=-1pt of B] {a};
         \end{tikzpicture}
-        \label{fig:huffman_graph}
-        \caption{Árbol de Huffman para la cadena $S=\text{abcdabcaba}$}
+        \caption{Árbol de Huffman para la cadena $S=$``abcdabcaba''}
+        \label{fig:huffman_tree}
     \end{figure}
 
     \subsection{Medidas de Desempeño y Análisis Cuantitativo}
 
+        Dada una cadena $\mathbf{X}$ de $N$ caracteres $x_i$ diferentes, la distribución de probabilidad de masa de los caracteres $p(x_i)$ y la función de longitud del código binario para un $x$, $\ell(x)$ se definen:
+
         \subsubsection*{Longitud Promedio de Codificación (L):}
+            Como la esperanza de la probabilidad
 
             \begin{equation}
-                L = \sum_{i=1}^{N} p_i l_i
+                L = \mathbb{E}[\ell(\mathbf{X})]=\sum_{i=1}^{N} p_i l_i
                 \label{eq:avg_length}
             \end{equation}
 
@@ -198,27 +207,73 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
 \section{Análisis de Datos}
 
-{\color{red}ACA VAN LOS GRAFICOS DE BARRA}
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{lllllll}
+        \toprule
+        \textbf{Nombre del} & 
+        \textbf{$\boldsymbol{H}$ Entropía} & 
+        \textbf{$\boldsymbol{\eta}$ Entropía} & 
+        \textbf{Símbolos} & 
+        \textbf{$\boldsymbol{L}$ Longitud}  & 
+        $\boldsymbol{L_{\text{unif}}}$ \textbf{Longitud}  & 
+        $\boldsymbol{R}$ \textbf{Reducción}  
+        \\
+        \textbf{Archivo} & 
+        & 
+        \textbf{Normalizada} & 
+        \textbf{Distintos} & 
+        \textbf{Promedio} & 
+        \textbf{Uniforme Mínima}  & 
+        \textbf{de Memoria} \\ 
+        & 
+        {\tiny[bits/símbolo]} & 
+        {\tiny$\in [0,1]$} & 
+        {\tiny[cantidad]} & 
+        {\tiny[bits/símbolo]} & 
+        {\tiny[bits/íymbolo]} & 
+        {\tiny[\%]} \\
+        \midrule
+        adn.txt & 1.999999 & 1.000000 & 4 & 2.000000 & 2.000000 & 0.000000 \\
+        \midrule
+        mitología.txt & 4.268560 & 0.791600 & 42 & 4.301327 & 6.000000 & 28.311223 \\
+        \midrule
+        tabla.txt & 3.466877 & 0.647101 & 41 & 3.516129 & 6.000000 & 41.397849 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Resumen de los cálculos realizados para los textos de ejemplo}
+    \label{tab:calcs}
+\end{table}
+
 
 \begin{multicols}{2}
 
+Para poder darle una noción numérica a todo lo conceptualizado en este trabajo se utilizaron tres archivos de texto de formatos totalmente diferentes, de manera que se pueda notar una diferencia significativa a la hora de aplicar la teoría. En un breve resumen, \textit{adn.txt} es una secuencia de nucleótidos representada solo por 4 caracteres, \textit{mitología.txt} es una descripción y relato sobre la mitología y por último, \textit{tabla.txt}, es un archivo en formato \texttt{.json} con datos mayormente numéricos.
 
-En los graficos se presentan las distribuciones de frecuencia de aparición de símbolos en tres archivos
-de texto distinto: adn.txt, mitologia.txt y tabla.txt. {\color{red}SI ESTO LO PONEN EN METODOLOGIA AVISEN}
+En la Figura \ref{fig:character_pmf} se presentan las distribuciones de frecuencia de aparición de los símbolos para cada uno de los textos.
 
-En primer lugar, el archivo adn.txt muestra una distribucion completamente uniforme entre los cuatro
-simbolos que lo componen. Cada uno aparece con una frecuencia cercana al 25\% lo cual es coherente con la estructura de secuencia de un ADN.
+En primer lugar, el archivo adn.txt muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen. Cada uno aparece con una frecuencia alrededor del 25\% lo cual es coherente con la estructura de secuencia del ADN. Esto es un ejemplo sencillo para pensar la información que trasmite cada caracter. Partiendo de que, como definimos anteriormente, la información $\sim 1/p$ entonces cada caracter estaría representando $-\log_2(p)\approx 2$ bits de información. Si eliminamos un caracter de la cadena, estaríamos perdiendo demasiada información, y de hecho si hablamos de información genética, quitar un tipo de nucleótido dejaría a esta codificación genética biológicamente inservible.
+
+Si suponemos el caso en que no sabemos de que se trata la cadena de texto y sólo tenemos los datos del Cuadro \ref{tab:calcs}, ¿qué conclusiones podríamos obtener?.
+En primer lugar, lo obvio que vemos en la gráfico de barras se ve a primera vista en la entropía de Shannon normalizada $(\eta)\in [0,1]$. A mayor cercanía al 1, significaría una distribución más uniforme en la frecuencia de aparición de cada caracter y en nuestro caso con una precisión de 6 decimales sabemos que es perfectamente uniforme. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.41\textwidth]{figures/character_pmf.png}
+    \caption{Masa de probabilidad de los caracteres para cada uno de los textos de ejemplos}
+    \label{fig:character_pmf}
+\end{figure}
+
+
 
 Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria
-deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el " " (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
+deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el ``\_'' (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
 
 Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de 
 organizacion tipica de informacion numerica. 
 
 En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion
-
-
-AHORA VA LA TABLA
 
 Los tres textos presentan comportamientos muy distintos, lo que permite observar como la estructura estadistica mencionada anteriormente
 influye directamente en su compresibilidad
@@ -233,8 +288,6 @@ para comprimir informacion de manera eficiente.
 
 Por su parte, tabla.txt es aquel en el que se logra una mayor compresibilidad siendo de 41.30\%. Esto debido a que su frecuencia esta dominada por unos pocos caracteres numericos y signos de puntuacion. Esta fuerte concentracion reduce la entropia
 a solo 3.46 bits/simbolo (0.64 normalizada) y permitiendo obtener la mayor eficiencia de codificacion.
-
-
 
 \end{multicols}
 
