@@ -19,6 +19,9 @@
 \algrenewcommand{\algorithmicensure}{\textbf{Output:}}
 \algrenewcommand{\alglinenumber}[1]{}
 
+\usepackage{tikz}
+\usetikzlibrary{shapes,positioning}
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Título %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,13 +124,42 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
     \end{algorithm}
 
     Se añaden los símbolos de menor a mayor frecuencia en el árbol, creando subárboles de manera que la frecuencia del nodo padre es la suma de la frecuencia de sus hijos. De esta menera, iterativamente se van uniendo los subárboles dejando una estructura como la de la Figura \ref{fig:huffman_tree} Luego es tan simple como asignar a cada rama un valor binario y la codificación para cada símbolo es el camino que hay que hacer desde la raíz hasta la hoja que representa a ese símbolo. En el ejemplo de la figura: a = 0, b = 10, c = 110 y d = 111 
-    
+
+    \tikzset{
+        nodelabel/.style = {draw=none, rectangle, font=\small},
+        edgeleft/.style = {draw=mustard, line width=1pt},
+        edgeright/.style = {draw=lightpurple, line width=1pt},
+        edgelabelleft/.style = {midway, above right=1.5pt, color=mustard},
+        edgelabelright/.style = {midway, above left=1.5pt, color=lightpurple}
+    }
+    \definecolor{mustard}{HTML}{f08c00}
+    \definecolor{lightpurple}{HTML}{9c36b5}
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.18\textwidth]{figures/huffman_tree.png}
+        \begin{tikzpicture}
+            \node[circle, draw] (A) at (1, 4) {10};
+            \node[circle, draw] (B) at (0, 3) {4};
+            \node[circle, draw] (C) at (2, 3) {6};
+            \node[circle, draw] (D) at (1, 2) {3};
+            \node[circle, draw] (E) at (3, 2) {3};
+            \node[circle, draw] (F) at (2, 1) {2};
+            \node[circle, draw] (G) at (4, 1) {1};
+
+            \draw[edgeright] (A) -- (B) node[edgelabelright] {0};
+            \draw[edgeleft] (A) -- (C) node[edgelabelleft] {1};
+            \draw[edgeright] (C) -- (D) node[edgelabelright] {0};
+            \draw[edgeleft] (C) -- (E) node[edgelabelleft] {1};
+            \draw[edgeright] (E) -- (F) node[edgelabelright] {0};
+            \draw[edgeleft] (E) -- (G) node[edgelabelleft] {1};
+            
+            \node[nodelabel, below=-1pt of G] {d};
+            \node[nodelabel, below=-1pt of F] {c};
+            \node[nodelabel, below=-1pt of D] {b};
+            \node[nodelabel, below=-1pt of B] {a};
+        \end{tikzpicture}
+        \label{fig:huffman_graph}
         \caption{Árbol de Huffman para la cadena $S=\text{abcdabcaba}$}
-        \label{fig:huffman_tree}
-    \end{figure}
+    \end{figure}
 
     \subsection{Medidas de Desempeño y Análisis Cuantitativo}
 
@@ -166,26 +198,25 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
 \section{Análisis de Datos}
 
-ACA VAN LOS GRAFICOS DE BARRA
+{\color{red}ACA VAN LOS GRAFICOS DE BARRA}
 
 \begin{multicols}{2}
 
 
 En los graficos se presentan las distribuciones de frecuencia de aparición de símbolos en tres archivos
-de texto distinto: adn.txt, mitologia.txt y tabla.txt. SI ESTO LO PONEN EN METODOLOGIA AVISEN
+de texto distinto: adn.txt, mitologia.txt y tabla.txt. {\color{red}SI ESTO LO PONEN EN METODOLOGIA AVISEN}
 
 En primer lugar, el archivo adn.txt muestra una distribucion completamente uniforme entre los cuatro
 simbolos que lo componen. Cada uno aparece con una frecuencia cercana al 25\% lo cual es coherente con la estructura de secuencia de un ADN.
 
 Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria
-deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el " " (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. (Capaz puede decir algo mas)
+deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el " " (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
 
 Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de organizacion tipica de informacion numerica. 
 
 En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion
 
-
-AHORA VA LA TABLA. ACA MEDIO QUE REPTTO LO MISMO. ARREGLAR DESPUES
+{\color{red}AHORA VA LA TABLA. ACA MEDIO QUE REPTTO LO MISMO. ARREGLAR DESPUES}
 
 En el caso del adn.txt, se observa un alfabeto muy reducido compuesto de solo 4 simbolos unicos con frecuencias identicas. Es debido a esto que el codigo de
 Huffman no puede lograr ninguna compresion adicional respecto al codigo binario uniforme. La longitud promedio resulta de 2 bits por simbolo siendo igual a la longitud uniforme minima y dando una reduccion de 0 \%. Esto confirma que cuando todos
@@ -194,13 +225,8 @@ los simbolos tienen la misma probabilidad, Huffman no ofrece ventajas, ya que el
 Por el contrario, en mitologia.txt la distribucion de frecuencia es muy desigual. Esto permite que Huffman asigne codigos mas cortos a simbolos frecuentes y mas largos a aquellos mas raros logrando una
 longitud promedio de 4.30 bits por simbolo, frente a una longitud uniforme minima de 6 bits. Consecuentemente, somos capaces de lograr una reduccion de memoria del 28.31 \%. Este resultado muestra la eficacia de este metodo para aprovechar la reduncancia estadistica para facilitar una codificacion eficiente.
 
-Finalmente, en tabla.txt vemos una disstribucion no uniforme dominada por numeros y signos de puntuacion. En este caso, el numero de simbolos unicos es similar al del texto de mitologia (PREGUNTAR A BOMBI SI LO TRUNCO), sin embargo vemos que la longitud promedio de Huffman es menor siendo de 3.52 bits por simbolo y una reduccion de memoria del 41.40\%. Esto indica 
+Finalmente, en tabla.txt vemos una disstribucion no uniforme dominada por numeros y signos de puntuacion. En este caso, el numero de simbolos unicos es similar al del texto de mitologia ({\color{red}PREGUNTAR A BOMBI SI LO TRUNCO}), sin embargo vemos que la longitud promedio de Huffman es menor siendo de 3.52 bits por simbolo y una reduccion de memoria del 41.40\%. Esto indica 
 que el archivo contiene una mayor proporcion de repeticiones siendo mas compresible. 
-
-
-
-
-
 
 \end{multicols}
 
@@ -211,6 +237,5 @@ que el archivo contiene una mayor proporcion de repeticiones siendo mas compresi
     \begin{multicols}{2}
 
     \end{multicols}
-
 
 \end{document}
