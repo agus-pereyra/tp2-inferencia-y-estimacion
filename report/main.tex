@@ -212,21 +212,29 @@ simbolos que lo componen. Cada uno aparece con una frecuencia cercana al 25\% lo
 Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria
 deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el " " (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
 
-Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de organizacion tipica de informacion numerica. 
+Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de 
+organizacion tipica de informacion numerica. 
 
 En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion
 
-{\color{red}AHORA VA LA TABLA. ACA MEDIO QUE REPTTO LO MISMO. ARREGLAR DESPUES}
 
-En el caso del adn.txt, se observa un alfabeto muy reducido compuesto de solo 4 simbolos unicos con frecuencias identicas. Es debido a esto que el codigo de
-Huffman no puede lograr ninguna compresion adicional respecto al codigo binario uniforme. La longitud promedio resulta de 2 bits por simbolo siendo igual a la longitud uniforme minima y dando una reduccion de 0 \%. Esto confirma que cuando todos
-los simbolos tienen la misma probabilidad, Huffman no ofrece ventajas, ya que el codigo optimo coincide con el codigo de longitud fija.
+AHORA VA LA TABLA
 
-Por el contrario, en mitologia.txt la distribucion de frecuencia es muy desigual. Esto permite que Huffman asigne codigos mas cortos a simbolos frecuentes y mas largos a aquellos mas raros logrando una
-longitud promedio de 4.30 bits por simbolo, frente a una longitud uniforme minima de 6 bits. Consecuentemente, somos capaces de lograr una reduccion de memoria del 28.31 \%. Este resultado muestra la eficacia de este metodo para aprovechar la reduncancia estadistica para facilitar una codificacion eficiente.
+Los tres textos presentan comportamientos muy distintos, lo que permite observar como la estructura estadistica mencionada anteriormente
+influye directamente en su compresibilidad
 
-Finalmente, en tabla.txt vemos una disstribucion no uniforme dominada por numeros y signos de puntuacion. En este caso, el numero de simbolos unicos es similar al del texto de mitologia ({\color{red}PREGUNTAR A BOMBI SI LO TRUNCO}), sin embargo vemos que la longitud promedio de Huffman es menor siendo de 3.52 bits por simbolo y una reduccion de memoria del 41.40\%. Esto indica 
-que el archivo contiene una mayor proporcion de repeticiones siendo mas compresible. 
+El archivo adn.txt representa el extremo mas simple. Su distribucion uniforme produce una entropia baja de 1.99 bit/simbolo (1 normalizada) y una longitud promedio
+de Huffman igual a la minima posible (2 bits/simbolo). Ante la inexistencia de diferencias en las probabilidades, el codigo no puede optimizarse, por lo que resulta en una reduccion de memoria nula.
+Este es el peor caso posible donde la codificacion de Huffman no ofrece ninguna ventaja.
+
+Por otra parte, la distribucion variada de mitologia.txt tipica del lenguaje natural genera una entropia intermedia 4.26 bits/simbolo (0.79 normalizada), y permite al algoritmo asignar codigos mas cortos a los simbolos frecuentes. Gracias a esto,
+se obtiene una longitud promedio de 4.27 bits/simbolo y una reduccion de memoria de al 28.31\%. En este caso se puede apreciar claramente como la redundancia del lenguaje natural puede aprobecharse
+para comprimir informacion de manera eficiente.
+
+Por su parte, tabla.txt es aquel en el que se logra una mayor compresibilidad siendo de 41.30\%. Esto debido a que su frecuencia esta dominada por unos pocos caracteres numericos y signos de puntuacion. Esta fuerte concentracion reduce la entropia
+a solo 3.46 bits/simbolo (0.64 normalizada) y permitiendo obtener la mayor eficiencia de codificacion.
+
+
 
 \end{multicols}
 
