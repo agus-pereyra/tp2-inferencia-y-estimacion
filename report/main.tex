@@ -250,6 +250,8 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Análisis de Datos %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
 \section{Análisis de Datos}
 
 \begin{multicols}{2}
@@ -258,11 +260,7 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     El primer paso que debemos realizar es calcular la PMF (Probability Mass Function) de los caracteres, de la que ya mencionamos que parten el resto de medidas utilizadas para la sección. En la Figura~\ref{fig:character_pmf} se encuentra la representación gráfica de esta función para los textos de ejemplo.
 
-    En un primer vistazo de este gráfico, vemos que el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen, es decir, $L = L_\text{unif}$ que se puede observar efectivamente más adelante. Cada uno aparece con una frecuencia alrededor del 25\% lo cual es coherente con la estructura de secuencia del ADN. Esto es un ejemplo sencillo para pensar la información que trasmite cada caracter. Partiendo de que, como definimos anteriormente, la información $\sim 1/p$ entonces cada caracter estaría representando $-\log_2(p)\approx 2$ bits de información. Si eliminamos un caracter de la cadena, estaríamos perdiendo demasiada información, y de hecho si hablamos de información genética, quitar un tipo de nucleótido dejaría a esta codificación genética biológicamente inservible.
-
-    Lo último se ve reflejado en la compresión relativa en memoria que genera la codificación de Huffman para este texto, la cual es exactamente nula (observable en el Cuadro~\ref{tab:calcs}). La cadena no contiene redundancia alguna y por lo que el algoritmo no tiene oportunidad para aprovechar a ahorrar memoria, cada uno de los bits almacenados son indispensables.
-
-    Algo fácil de relacionar entre el gráfico y la tabla es la entropía normalizada. A mayor cercanía al 1, significaría una distribución más uniforme en la frecuencia cada caracter y en nuestro caso con una precisión de 4 decimales sabemos que es casi perfectamente uniforme. En el resto de textos al tener un mayor $N$ y una concentración de ciertos caracteres, este valor es menor.
+    TODO LO QUE ESTA ARRIBA DE ESTO LO PASARIA AL DESARROLLO EXPRIMENTAL
 
     \begin{figure}[H]
         \centering
@@ -271,68 +269,69 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
         \label{fig:character_pmf}
     \end{figure}
 
-    Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el ``\_'' (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
 
-    Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de 
-    organizacion tipica de informacion numerica. 
 
-\end{multicols}
+    \begin{table}[H]
+        \centering
+        \footnotesize
+        \begin{tabular}{lllllll}
+            \toprule
+            & 
+            \textbf{Entropía} & 
+            \textbf{Entropía} & 
+            \textbf{Símbolos} & 
+            \textbf{Longitud} & 
+            \textbf{Longitud} & 
+            \textbf{Reducción}  
+            \\
+            & 
+            & 
+            \textbf{Normalizada} & 
+            \textbf{Únicos} & 
+            \textbf{Promedio} & 
+            \textbf{Uniforme Mínima}  & 
+            \textbf{de Memoria} \\ 
+            & 
+            {\tiny$H$ [bits/símbolo]} & 
+            {\tiny$\eta \in [0,1]$} & 
+            {\tiny$N$ [cantidad]} & 
+            {\tiny$L$ [bits/símbolo]} & 
+            {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
+            {\tiny$R$ [\%]} \\
+            \midrule
+            {\smaller\textbf{adn.txt}} & 1.9999 & 1.0000 & 4 & 2.0000 & 2.0000 & 0.0000 \\
+            \midrule
+            {\smaller\textbf{mitología.txt}} & 4.2685 & 0.7916 & 42 & 4.3013 & 6.0000 & 28.3112 \\
+            \midrule
+            {\smaller\textbf{tabla.txt}} & 3.4668 & 0.6471 & 41 & 3.5161 & 6.0000 & 41.3978 \\
+            \bottomrule
+        \end{tabular}
+        \caption{Resumen de los cálculos de las medidas mencionadas en la sección anterior realizados para los textos de ejemplo}
+        \label{tab:calcs}
+    \end{table}
 
-\begin{table}[H]
-    \centering
-    \footnotesize
-    \begin{tabular}{lllllll}
-        \toprule
-        & 
-        \textbf{Entropía} & 
-        \textbf{Entropía} & 
-        \textbf{Símbolos} & 
-        \textbf{Longitud} & 
-        \textbf{Longitud} & 
-        \textbf{Reducción}  
-        \\
-        & 
-        & 
-        \textbf{Normalizada} & 
-        \textbf{Únicos} & 
-        \textbf{Promedio} & 
-        \textbf{Uniforme Mínima}  & 
-        \textbf{de Memoria} \\ 
-        & 
-        {\tiny$H$ [bits/símbolo]} & 
-        {\tiny$\eta \in [0,1]$} & 
-        {\tiny$N$ [cantidad]} & 
-        {\tiny$L$ [bits/símbolo]} & 
-        {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
-        {\tiny$R$ [\%]} \\
-        \midrule
-        {\smaller\textbf{adn.txt}} & 1.9999 & 1.0000 & 4 & 2.0000 & 2.0000 & 0.0000 \\
-        \midrule
-        {\smaller\textbf{mitología.txt}} & 4.2685 & 0.7916 & 42 & 4.3013 & 6.0000 & 28.3112 \\
-        \midrule
-        {\smaller\textbf{tabla.txt}} & 3.4668 & 0.6471 & 41 & 3.5161 & 6.0000 & 41.3978 \\
-        \bottomrule
-    \end{tabular}
-    \caption{Resumen de los cálculos de las medidas mencionadas en la sección anterior realizados para los textos de ejemplo}
-    \label{tab:calcs}
-\end{table}
 
-\begin{multicols}{2}
 
-En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion
 
-Los tres textos presentan comportamientos muy distintos, lo que permite observar como la estructura estadistica mencionada anteriormente
-influye directamente en su compresibilidad
 
-El archivo adn.txt representa el extremo mas simple. Su distribucion uniforme produce una entropia baja de 1.99 bit/simbolo (1 normalizada) y una longitud promedio
-de Huffman igual a la minima posible (2 bits/simbolo). Ante la inexistencia de diferencias en las probabilidades, el codigo no puede optimizarse, por lo que resulta en una reduccion de memoria nula.
-Este es el peor caso posible donde la codificacion de Huffman no ofrece ninguna ventaja.
+    De  \ref{fig:character_pmf} obtenemos que el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen. Es decir, $L = L_\text{unif}$. Cada simbolo aparece con una frecuencia alrededor del 25\% (siendo coherente con la estructura de secuencia del ADN). Recordando la definicion previa de la información como $\sim 1/p$, cada caracter estaría representando $-\log_2(p)\approx 2$ bits de información lo se ve 
+    reflejado en la compresión relativa en memoria que genera la codificación de Huffman siendo exactamente nula (observable en el Cuadro~\ref{tab:calcs}). La cadena no contiene redundancia alguna por lo que el algoritmo no presenta ninguna ventaja en el ahorro de memoria. Asimismo, observamos como la entropia normalizada del texto es exactamente 1 confirmando una distribucion perfectamete uniforme. 
 
-Por otra parte, la distribucion variada de mitologia.txt tipica del lenguaje natural genera una entropia intermedia 4.26 bits/simbolo (0.79 normalizada), y permite al algoritmo asignar codigos mas cortos a los simbolos frecuentes. Gracias a esto,
-se obtiene una longitud promedio de 4.27 bits/simbolo y una reduccion de memoria de al 28.31\%. En este caso se puede apreciar claramente como la redundancia del lenguaje natural puede aprobecharse para comprimir informacion de manera eficiente.
 
-Por su parte, tabla.txt es aquel en el que se logra una mayor compresibilidad siendo de 41.30\%. Esto debido a que su frecuencia esta dominada por unos pocos caracteres numericos y signos de puntuacion. Esta fuerte concentracion reduce la entropia
-a solo 3.46 bits/simbolo (0.64 normalizada) y permitiendo obtener la mayor eficiencia de codificacion.
+
+
+    
+    {\color{red}
+    Algo fácil de relacionar entre el gráfico y la tabla es la entropía normalizada. 
+    ESTO MARCO TEORICO (A mayor cercanía al 1, significaría una distribución más uniforme) en la frecuencia de cada caracter y en nuestro caso con una precisión de 4 decimales sabemos que es casi perfectamente uniforme. En el resto de textos al tener un mayor $N$ y una concentración de ciertos caracteres, este valor es menor.
+    }
+
+
+    Por otro lado, el archivo mitología.txt muestra una distribución de frecuencias mucho más variada. Se observa cómo unas pocas letras concentran una gran cantidad de apariciones, lo cual es característico del lenguaje natural. El carácter más utilizado resulta ser el ``\_'' (espacio), en concordancia con la regla gramatical que establece su uso para separar palabras. Esta estructura genera una entropía intermedia de 4.26 bits/símbolo (0.79 normalizada), permitiendo al algoritmo de Huffman asignar códigos más cortos a los símbolos de mayor frecuencia. Gracias a ello, se obtiene una longitud promedio de 4.27 bits/símbolo y una reducción de memoria del 28.31\%. En este caso, puede apreciarse claramente cómo la redundancia inherente al lenguaje natural puede aprovecharse para comprimir información de manera eficiente.
+
+    Finalmente, en el archivo tabla.txt, al tratarse de una tabla de valores, predominan los caracteres numéricos y los signos de puntuación. A diferencia del caso anterior, esta distribución no responde a patrones lingüísticos, sino a una organización propia de la información numérica. En este caso se logra la mayor compresibilidad, alcanzando una reducción del 41.30\%. Esto se debe a que la frecuencia está dominada por unos pocos caracteres que concentran la mayoría de las apariciones, lo cual reduce la entropía a 3.46 bits/símbolo (0.64 normalizada) y permite obtener la mayor eficiencia de codificación entre los textos analizados.
+
+    En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion influyendo directamente en su compresibilidad.
 
 \end{multicols}
 
