@@ -14,17 +14,21 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{relsize}
 
+\usepackage{algpseudocode}
+% Configuración del bloque de pseucódigo
 \algrenewcommand{\algorithmicrequire}{\textbf{Input:}}
 \algrenewcommand{\algorithmicensure}{\textbf{Output:}}
 \algrenewcommand{\alglinenumber}[1]{}
+\floatname{algorithm}{Algoritmo}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes,positioning}
 
-\usepackage{booktabs}
-\usepackage{siunitx}
+\newcommand{\sectionrule}{\noindent\color{black!30}\rule{\linewidth}{0.6pt}}
 
 \begin{document}
 
@@ -79,6 +83,8 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     \end{multicols}
 
+{\sectionrule}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Desarrollo Experimental %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Desarrollo Experimental}
@@ -87,19 +93,19 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     \subsection{Estimación del Modelo probabilístico de la Fuente}
 
-        El primer paso en la implementación de la \textbf{codificación de Huffman} es estimar el modelo probabilístico de la fuente (texto). Esto se logra mediante el análisis de la frecuencia de aparición de cada símbolo en el conjunto de datos. La probabilidad estimada \( p_i \) del $i$-ésimo símbolo \( s_i \) se calcula como:
+        El primer paso en la implementación de la \textbf{codificación de Huffman} es estimar el modelo probabilístico de la fuente (texto). Esto se logra mediante el análisis de la frecuencia de aparición de cada símbolo en el conjunto de datos. La probabilidad estimada del $i$-ésimo símbolo \( s_i \) con su frecuencia asociada $f_i$ se calcula como:
 
         \begin{equation}
-            p_i = \frac{f_i}{\sum_{j=1}^{N} f_j}
+            p(x_i) = \frac{f_i}{M}
             \label{eq:prob}
         \end{equation}
 
-        donde cada caracter es una realización de la variable aleatoria fuente \( S \).
+        donde cada caracter es una de las $N$ realizaciones totales de la variable aleatoria fuente \( S \) y $M=\sum_{j=1}^{N} f_j$, en otras palabras la longitud total de la fuente.
         El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este diccionario constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}. 
 
         Es de interés aclarar que en este informe no se realiza un distinción entre mayúsculas y minúsculas, ya que el objetivo principal es reducir el tamaño del texto manteniendo su compresibilidad. La información que aporta una diferenciación entre mayúscula y minúscula es muy pequeña al lado de la complejidad que le aporta a la codificación de Hoffman. La ausencia de mayusculas al inicio de las oraciones no afecta la comprensión, por lo que no se considera prescindible. No obstante, posteriormente podria aplicarse un algoritmo que reemplace automáticamente por mayusculas las letras que sigan a un punto (``.'').
 
-        Las caracteristicas del resultado de la Ecuación \eqref{eq:prob} se basan en los \textbf{Axiomas de la Probabilidad}, es decir, la suma de los $p_i$ es igual a 1, $\sum_{i=1}^N p_i = 1$, la probabilidad de un evento puntual es mayor a cero, $\mathbb{P}(p_i) \geq 0$, y si  $A \cap B = \emptyset \Rightarrow \mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B)$
+        Las caracteristicas del resultado de la Ecuación~\eqref{eq:prob} se basan en los \textbf{Axiomas de la Probabilidad}, es decir, la suma de los $p_i$ es igual a 1, $\sum_{i=1}^N p_i = 1$, la probabilidad de un evento puntual es mayor a cero, $\mathbb{P}(p_i) \geq 0$, y si  $A \cap B = \emptyset \Rightarrow \mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B)$
 
     \subsection{Codificación de Huffman}
 
@@ -109,25 +115,28 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     \subsection{Construcción del Árbol de Huffman}
     
+    El árbol es generado de la forma que es representado en el Algoritmo~\ref{algorithm:huffman_code}, se añaden los símbolos de menor a mayor frecuencia en el árbol creando subárboles de manera que la frecuencia del nodo padre es la suma de la frecuencia de sus hijos. De esta menera, iterativamente se van uniendo los subárboles dejando una estructura como la de la Figura~\ref{fig:huffman_tree}
+
     \begin{algorithm}[H]
     \small
-    \caption{HuffmanCoding}
+    \caption{HuffmanTree}
         \begin{algorithmic}[1]
             \Require$\mathbf{pmf} \ p(s)$ de los caracteres $s_i$ de la cadena $S$ 
             \State$Q\gets$ priority-queue de nodos $n_i = \left< s_i, p(s_i)\right>$
             \State{\color{gray} \# orden ascendente de $p$}
             \While{len$(Q) > 1$}
-                \State$n_1 \gets Q\text{.pop}()$
-                \State$n_2 \gets Q\text{.pop}()$
-                \State$n_\text{padre} \gets  \left<n_1 | n_2, n_1.p + n_2.p \right>$
+                \State$n_1, p_1 \gets Q\text{.pop}()$
+                \State$n_2, p_2 \gets Q\text{.pop}()$
+                \State$n_\text{padre} \gets  \left<\text{sub-árbol}(n_1, n_2), p_1+p_2 \right>$
                 \State$Q.$enqueue($n_\text{padre}$)
             \EndWhile
             \State root $\gets Q$.pop()
             \State\Return root
         \end{algorithmic}
+        \label{algorithm:huffman_code}
     \end{algorithm}
 
-    Se añaden los símbolos de menor a mayor frecuencia en el árbol, creando subárboles de manera que la frecuencia del nodo padre es la suma de la frecuencia de sus hijos. De esta menera, iterativamente se van uniendo los subárboles dejando una estructura como la de la Figura \ref{fig:huffman_tree} Luego es tan simple como asignar a cada rama un valor binario y la codificación para cada símbolo es el camino que hay que hacer desde la raíz hasta la hoja que representa a ese símbolo. En el ejemplo de la figura: a = 0, b = 10, c = 110 y d = 111 
+    Luego la codificación se logra asignando a cada rama un valor binario y para cada símbolo se toma los valores de las ramas del camino único que se realiza desde la raíz hasta la hoja que representa a ese símbolo. En el ejemplo de la figura la codificación para una cadena ``abcdabcaba'' quedaría tal que a = 0, b = 10, c = 110 y finalmente d = 111.
 
     \tikzset{
         nodelabel/.style = {draw=none, rectangle, font=\small},
@@ -169,109 +178,143 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     \subsection{Medidas de Desempeño y Análisis Cuantitativo}
 
-        Dada una cadena $\mathbf{X}$ de $N$ caracteres $x_i$ diferentes, la distribución de probabilidad de masa de los caracteres $p(x_i)$ y la función de longitud del código binario para un $x$, $\ell(x)$ se definen:
+        Dada una cadena $\mathbf{X}$ de $N$ caracteres $x_i$ únicos y la distribución de probabilidad de los caracteres $p(x_i)$ se realiza la codificación de Huffman para $\mathbf{X}$, de la cual podemos obtener la longitud del código binario para cada símbolo, $\ell(x_i)$. Es de estos datos sencillos de obtener de donde, a partir de ciertos cálculos, es posible estudiar cuantitativamente y procesar la información de cualquier cadena. A continuación algunas descripciones de estas medidas:
 
-        \subsubsection*{Longitud Promedio de Codificación (L):}
-            Como la esperanza de la probabilidad
+        \subsubsection*{Longitud Promedio de Codificación}
+            Es definida como la esperanza de la longitud del código de la cadena y su cálculo es simplemente el costo promedio en bits por símbolo, es decir representa la longitud media del código de cada caracter.
 
             \begin{equation}
-                L = \mathbb{E}[\ell(\mathbf{X})]=\sum_{i=1}^{N} p_i l_i
+                L(\mathbf{X}) = \mathbb{E}[\ell(\mathbf{X})]=\sum_{i=1}^{N} p(x_i)\ell(x_i)
                 \label{eq:avg_length}
             \end{equation}
 
-        \subsubsection*{Comparación con la Codificación Uniforme}
-
-            \begin{equation}
-                L_{\text{unif}} = \lceil \log_2 (N) \rceil
-                \label{eq:unif}
-            \end{equation}
-
-        \subsubsection*{Reducción de Memoria}
-
-            \begin{equation}
-                R = \left(1 - \frac{L}{L_{\text{unif}}}\right) \times 100\%
-                \label{eq:reduction}
-            \end{equation}
-
-        \subsubsection*{Compresibilidad de la Fuente (Entropia Normalizada, $\eta$)}
+            Con este podemos darnos una idea de qué tan complejo es la codificación que nos aporta el algoritmo de Huffman. A mayor $L$, podemos inferir 2 posibles casos, que haya una gran cantidad de caracteres y por lo tanto el árbol binario es de una mayor profundidad o simplemente que la codificación sea ineficiente en términos de compresión.
         
-            \begin{equation}
-                \eta = \frac{H(S)}{\log_2(N)}
-                \label{eq:entropia_normalizada}
-            \end{equation}
+            \subsubsection*{Longitud Uniforme Mínima de Codificación}
+            
+                Este expresa la mínima cantidad de bits por símbolo necesaria para una codificación uniforme, es decir que no tiene en cuenta la frecuencia de aparación de cada uno de los símbolos.
 
-    \end{multicols}
+                \begin{equation}
+                    L_{\text{unif}}(\mathbf{X}) = \lceil \log_2 (N) \rceil
+                    \label{eq:unif}
+                \end{equation}
 
+                Es muy útil a la hora de evaluar la efectividad de la codificación de Huffman de manera que si $L < L_\text{unif}$, ciertamente el algoritmo explota la redundancia de la cadena. 
+            
+            \subsubsection*{Reducción de Memoria}
+            
+                Con las dos definiciones anteriores, el porcentaje relativo de ahorro de memoria que aporta la codificación se puede estimar mediante la siguiente ecuación
+
+                \begin{equation}
+                    R(\mathbf{X}) = \left(1 - \frac{L(\mathbf{X})}{L_{\text{unif}}(\mathbf{X})}\right) \times 100\%
+                    \label{eq:reduction}
+                \end{equation}
+            
+            \subsubsection*{Entropía de Shannon}
+
+                Es de interés determinar la incertidumbre de una cadena a partir de la información esperada que es necesaria almacenar por cada caracter.
+
+                \begin{equation}
+                    H(\mathbf{X}) = -\sum_{i=1}^{N}p(x_i)\log_2(p(x_i))
+                    \label{eq:entropy}
+                \end{equation}
+                
+                En otras palabras, está definida como la $\mathbb{E}[I(x_i)]$ donde $I(x_i)$ es la información en bits del $i$-ésimo símbolo. 
+
+                Una forma de interpretar este valor es usando su relación con la longitud promedio de codificación, dado que este está acotado por el primero:
+
+                \begin{equation}
+                    H(\mathbf{X}) \leq L(\mathbf{X}) < H(\mathbf{X}) + 1
+                    \label{eq:avg_length_bound}
+                \end{equation}
+
+                en caso de que sean iguales, la codificación tiene una eficiencia máxima, y en el caso contrario en que $L>H$ se confirma que existe cierta redundancia en la cadena.
+
+
+            \subsubsection*{Entropia de Shannon Normalizada}
+
+                El problema de la medida anterior es que se encuentra escalada respecto a la cantidad de símbolos únicos $(N)$ de la cadena, es por eso que a la hora de realizar comparaciones entre cadenas de diferentes $N$ es necesario utilizar la versión normalizada (Ecuación~\eqref{eq:norm_entropy}).
+        
+                \begin{equation}
+                    \eta(\mathbf{X}) = \frac{H(S)}{\log_2(N)}
+                    \label{eq:norm_entropy}
+                \end{equation}
+
+                donde $\eta \in [0,1]$ tal que en sus valores extremos $\eta=1$ evidencia una incertidumbre total o una distribución totalmente uniforme de los símbolos, mientras que en $\eta=0$ la cadena sería una repetición continua de un solo caracter.
+\end{multicols}
+
+{\sectionrule}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Análisis de Datos %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Análisis de Datos}
+
+\begin{multicols}{2}
+
+    Para poder darle una noción numérica a todo lo conceptualizado en este trabajo se hizo uso de tres archivos de texto de formatos diferentes, de manera que se pueda notar una diferencia significativa a la hora de aplicar la teoría en su comparación. En un breve resumen, \textit{adn.txt} es una secuencia de nucleótidos representada solo por 4 caracteres, \textit{mitología.txt} es una descripción y relato sobre la mitología y por último, \textit{tabla.txt} es un archivo en formato \texttt{.json} con datos en su mayoría flotantes y otros como fechas.
+
+    El primer paso que debemos realizar es calcular la PMF (Probability Mass Function) de los caracteres, de la que ya mencionamos que parten el resto de medidas utilizadas para la sección. En la Figura~\ref{fig:character_pmf} se encuentra la representación gráfica de esta función para los textos de ejemplo.
+
+    En un primer vistazo de este gráfico, vemos que el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen, es decir, $L = L_\text{unif}$ que se puede observar efectivamente más adelante. Cada uno aparece con una frecuencia alrededor del 25\% lo cual es coherente con la estructura de secuencia del ADN. Esto es un ejemplo sencillo para pensar la información que trasmite cada caracter. Partiendo de que, como definimos anteriormente, la información $\sim 1/p$ entonces cada caracter estaría representando $-\log_2(p)\approx 2$ bits de información. Si eliminamos un caracter de la cadena, estaríamos perdiendo demasiada información, y de hecho si hablamos de información genética, quitar un tipo de nucleótido dejaría a esta codificación genética biológicamente inservible.
+
+    Lo último se ve reflejado en la compresión relativa en memoria que genera la codificación de Huffman para este texto, la cual es exactamente nula (observable en el Cuadro~\ref{tab:calcs}). La cadena no contiene redundancia alguna y por lo que el algoritmo no tiene oportunidad para aprovechar a ahorrar memoria, cada uno de los bits almacenados son indispensables.
+
+    Algo fácil de relacionar entre el gráfico y la tabla es la entropía normalizada. A mayor cercanía al 1, significaría una distribución más uniforme en la frecuencia cada caracter y en nuestro caso con una precisión de 4 decimales sabemos que es casi perfectamente uniforme. En el resto de textos al tener un mayor $N$ y una concentración de ciertos caracteres, este valor es menor.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.41\textwidth]{figures/character_pmf.png}
+        \caption{Función de masa de probabilidad de los caracteres de cada uno de los textos de ejemplo}
+        \label{fig:character_pmf}
+    \end{figure}
+
+    Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el ``\_'' (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
+
+    Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de 
+    organizacion tipica de informacion numerica. 
+
+\end{multicols}
 
 \begin{table}[H]
     \centering
     \footnotesize
     \begin{tabular}{lllllll}
         \toprule
-        \textbf{Nombre del} & 
-        \textbf{$\boldsymbol{H}$ Entropía} & 
-        \textbf{$\boldsymbol{\eta}$ Entropía} & 
+        & 
+        \textbf{Entropía} & 
+        \textbf{Entropía} & 
         \textbf{Símbolos} & 
-        \textbf{$\boldsymbol{L}$ Longitud}  & 
-        $\boldsymbol{L_{\text{unif}}}$ \textbf{Longitud}  & 
-        $\boldsymbol{R}$ \textbf{Reducción}  
+        \textbf{Longitud} & 
+        \textbf{Longitud} & 
+        \textbf{Reducción}  
         \\
-        \textbf{Archivo} & 
+        & 
         & 
         \textbf{Normalizada} & 
-        \textbf{Distintos} & 
+        \textbf{Únicos} & 
         \textbf{Promedio} & 
         \textbf{Uniforme Mínima}  & 
         \textbf{de Memoria} \\ 
         & 
-        {\tiny[bits/símbolo]} & 
-        {\tiny$\in [0,1]$} & 
-        {\tiny[cantidad]} & 
-        {\tiny[bits/símbolo]} & 
-        {\tiny[bits/íymbolo]} & 
-        {\tiny[\%]} \\
+        {\tiny$H$ [bits/símbolo]} & 
+        {\tiny$\eta \in [0,1]$} & 
+        {\tiny$N$ [cantidad]} & 
+        {\tiny$L$ [bits/símbolo]} & 
+        {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
+        {\tiny$R$ [\%]} \\
         \midrule
-        adn.txt & 1.999999 & 1.000000 & 4 & 2.000000 & 2.000000 & 0.000000 \\
+        {\smaller\textbf{adn.txt}} & 1.9999 & 1.0000 & 4 & 2.0000 & 2.0000 & 0.0000 \\
         \midrule
-        mitología.txt & 4.268560 & 0.791600 & 42 & 4.301327 & 6.000000 & 28.311223 \\
+        {\smaller\textbf{mitología.txt}} & 4.2685 & 0.7916 & 42 & 4.3013 & 6.0000 & 28.3112 \\
         \midrule
-        tabla.txt & 3.466877 & 0.647101 & 41 & 3.516129 & 6.000000 & 41.397849 \\
+        {\smaller\textbf{tabla.txt}} & 3.4668 & 0.6471 & 41 & 3.5161 & 6.0000 & 41.3978 \\
         \bottomrule
     \end{tabular}
-    \caption{Resumen de los cálculos realizados para los textos de ejemplo}
+    \caption{Resumen de los cálculos de las medidas mencionadas en la sección anterior realizados para los textos de ejemplo}
     \label{tab:calcs}
 \end{table}
 
-
 \begin{multicols}{2}
-
-Para poder darle una noción numérica a todo lo conceptualizado en este trabajo se utilizaron tres archivos de texto de formatos totalmente diferentes, de manera que se pueda notar una diferencia significativa a la hora de aplicar la teoría. En un breve resumen, \textit{adn.txt} es una secuencia de nucleótidos representada solo por 4 caracteres, \textit{mitología.txt} es una descripción y relato sobre la mitología y por último, \textit{tabla.txt}, es un archivo en formato \texttt{.json} con datos mayormente numéricos.
-
-En la Figura \ref{fig:character_pmf} se presentan las distribuciones de frecuencia de aparición de los símbolos para cada uno de los textos.
-
-En primer lugar, el archivo adn.txt muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen. Cada uno aparece con una frecuencia alrededor del 25\% lo cual es coherente con la estructura de secuencia del ADN. Esto es un ejemplo sencillo para pensar la información que trasmite cada caracter. Partiendo de que, como definimos anteriormente, la información $\sim 1/p$ entonces cada caracter estaría representando $-\log_2(p)\approx 2$ bits de información. Si eliminamos un caracter de la cadena, estaríamos perdiendo demasiada información, y de hecho si hablamos de información genética, quitar un tipo de nucleótido dejaría a esta codificación genética biológicamente inservible.
-
-Si suponemos el caso en que no sabemos de que se trata la cadena de texto y sólo tenemos los datos del Cuadro \ref{tab:calcs}, ¿qué conclusiones podríamos obtener?.
-En primer lugar, lo obvio que vemos en la gráfico de barras se ve a primera vista en la entropía de Shannon normalizada $(\eta)\in [0,1]$. A mayor cercanía al 1, significaría una distribución más uniforme en la frecuencia de aparición de cada caracter y en nuestro caso con una precisión de 6 decimales sabemos que es perfectamente uniforme. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.41\textwidth]{figures/character_pmf.png}
-    \caption{Masa de probabilidad de los caracteres para cada uno de los textos de ejemplos}
-    \label{fig:character_pmf}
-\end{figure}
-
-
-
-Por otro lado, el archivo mitologia.txt muestra una distribucion de frecuencias muchos mas variadas. Notamos como unas pocas letras concentran una gran cantidad de las apariciones. Esto podria
-deberse a la estructura del lenguaje español. Asimismo, vemos como el caracter mas usado es el ``\_'' (espacio) lo que concuerda con la regla gramatical de separar las palabras con este simbolo. {\color{red}(Capaz puede decir algo mas)}
-
-Finalmente, en el ultimo archivo al ser una tabla de valores observamos como predominan los caracteres numericos y signos de puntuacion. A diferencia del caso anterior, esta distribucion no sigue parametros linguisticos sino de 
-organizacion tipica de informacion numerica. 
 
 En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion
 
@@ -283,13 +326,14 @@ de Huffman igual a la minima posible (2 bits/simbolo). Ante la inexistencia de d
 Este es el peor caso posible donde la codificacion de Huffman no ofrece ninguna ventaja.
 
 Por otra parte, la distribucion variada de mitologia.txt tipica del lenguaje natural genera una entropia intermedia 4.26 bits/simbolo (0.79 normalizada), y permite al algoritmo asignar codigos mas cortos a los simbolos frecuentes. Gracias a esto,
-se obtiene una longitud promedio de 4.27 bits/simbolo y una reduccion de memoria de al 28.31\%. En este caso se puede apreciar claramente como la redundancia del lenguaje natural puede aprobecharse
-para comprimir informacion de manera eficiente.
+se obtiene una longitud promedio de 4.27 bits/simbolo y una reduccion de memoria de al 28.31\%. En este caso se puede apreciar claramente como la redundancia del lenguaje natural puede aprobecharse para comprimir informacion de manera eficiente.
 
 Por su parte, tabla.txt es aquel en el que se logra una mayor compresibilidad siendo de 41.30\%. Esto debido a que su frecuencia esta dominada por unos pocos caracteres numericos y signos de puntuacion. Esta fuerte concentracion reduce la entropia
 a solo 3.46 bits/simbolo (0.64 normalizada) y permitiendo obtener la mayor eficiencia de codificacion.
 
 \end{multicols}
+
+{\sectionrule}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusión %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
