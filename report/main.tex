@@ -250,8 +250,6 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Análisis de Datos %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 \section{Análisis de Datos}
 
 \begin{multicols}{2}
@@ -260,18 +258,24 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     El primer paso que debemos realizar es calcular la PMF (Probability Mass Function) de los caracteres, de la que ya mencionamos que parten el resto de medidas utilizadas para la sección. En la Figura~\ref{fig:character_pmf} se encuentra la representación gráfica de esta función para los textos de ejemplo.
 
-    TODO LO QUE ESTA ARRIBA DE ESTO LO PASARIA AL DESARROLLO EXPRIMENTAL
-
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.41\textwidth]{figures/character_pmf.png}
+        \includegraphics[width=0.45\textwidth]{figures/character_pmf.png}
         \caption{Función de masa de probabilidad de los caracteres de cada uno de los textos de ejemplo}
         \label{fig:character_pmf}
     \end{figure}
 
+    En un primer vistazo al gráfico, notamos que el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen, lo que significa que $L = L_\text{unif}$ (a continuación se corrobora este dato). Cada uno de estos aparecen con una frecuencia muy cercana al 25\% (siendo coherente con la estructura de secuencia del ADN).  
+    
+    Tanto en la teoría de la información estudiada como para el punto de vista biológico, eliminar uno de los componentes significaría perder demasiada información. Para este último eliminar un tipo de nucleótido dejaría a esta codificación genética biológicamente inservible. Asimismo para el eje de interés de este proyecto, lo mismo se ve reflejado en la compresión relativa en memoria que genera la codificación de Huffman, siendo exactamente nula (observable en el Cuadro~\ref{tab:calcs} junto al resto de datos). La cadena no contiene redundancia alguna por lo que el algoritmo no presenta ninguna ventaja en el ahorro de memoria. 
+    
+    Otra manera de ver esto es con la entropia normalizada que para este caso, con una precisión de 4 decimales es igual a 1. Como mencionamos en la sección anterior, gracias a este dato inferimos que la cadena tiene una distribución (casi) perfectamente uniforme de caracteres. En el resto de textos veremos que al tener un mayor $N$ y una concentración de ciertos caracteres, este valor es menor.
 
+    Por otro lado, el archivo mitología.txt muestra una distribución de frecuencias mucho más variada. Se observa cómo unas pocas letras concentran una gran cantidad de apariciones, lo cual es característico del lenguaje natural. El carácter más utilizado resulta ser el ``\_'' (espacio), en concordancia con la regla gramatical que establece su uso para separar palabras. A pesar de tener más de 10 veces la cantidad de símbolos que el primer texto, los valores de $\eta$ no están muy alejados del caso de distribución totalmente uniforme. Esto permite al algoritmo de Huffman asignar códigos más cortos a los símbolos de mayor frecuencia. Gracias a ello, se obtiene una longitud promedio de 4.27 bits/símbolo y una reducción de memoria del 28.31\%. En este caso, puede apreciarse claramente cómo la redundancia inherente al lenguaje natural puede aprovecharse para comprimir información de manera eficiente.
 
-    \begin{table}[H]
+    \end{multicols}
+
+        \begin{table}[H]
         \centering
         \footnotesize
         \begin{tabular}{lllllll}
@@ -299,39 +303,77 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
             {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
             {\tiny$R$ [\%]} \\
             \midrule
-            {\smaller\textbf{adn.txt}} & 1.9999 & 1.0000 & 4 & 2.0000 & 2.0000 & 0.0000 \\
+            {\smaller\textbf{adn.txt}} & 1.9999 & 1.0000 & 4 & 2.0000 & 2 & 0.0000 \\
             \midrule
-            {\smaller\textbf{mitología.txt}} & 4.2685 & 0.7916 & 42 & 4.3013 & 6.0000 & 28.3112 \\
+            {\smaller\textbf{mitología.txt}} & 4.2685 & 0.7916 & 42 & 4.3013 & 6 & 28.3112 \\
             \midrule
-            {\smaller\textbf{tabla.txt}} & 3.4668 & 0.6471 & 41 & 3.5161 & 6.0000 & 41.3978 \\
+            {\smaller\textbf{tabla.txt}} & 3.4668 & 0.6471 & 41 & 3.5161 & 6 & 41.3978 \\
             \bottomrule
         \end{tabular}
         \caption{Resumen de los cálculos de las medidas mencionadas en la sección anterior realizados para los textos de ejemplo}
         \label{tab:calcs}
     \end{table}
 
-
-
-
-
-    De  \ref{fig:character_pmf} obtenemos que el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen. Es decir, $L = L_\text{unif}$. Cada simbolo aparece con una frecuencia alrededor del 25\% (siendo coherente con la estructura de secuencia del ADN). Recordando la definicion previa de la información como $\sim 1/p$, cada caracter estaría representando $-\log_2(p)\approx 2$ bits de información lo se ve 
-    reflejado en la compresión relativa en memoria que genera la codificación de Huffman siendo exactamente nula (observable en el Cuadro~\ref{tab:calcs}). La cadena no contiene redundancia alguna por lo que el algoritmo no presenta ninguna ventaja en el ahorro de memoria. Asimismo, observamos como la entropia normalizada del texto es exactamente 1 confirmando una distribucion perfectamete uniforme. 
-
-
-
-
-    
-    {\color{red}
-    Algo fácil de relacionar entre el gráfico y la tabla es la entropía normalizada. 
-    ESTO MARCO TEORICO (A mayor cercanía al 1, significaría una distribución más uniforme) en la frecuencia de cada caracter y en nuestro caso con una precisión de 4 decimales sabemos que es casi perfectamente uniforme. En el resto de textos al tener un mayor $N$ y una concentración de ciertos caracteres, este valor es menor.
-    }
-
-
-    Por otro lado, el archivo mitología.txt muestra una distribución de frecuencias mucho más variada. Se observa cómo unas pocas letras concentran una gran cantidad de apariciones, lo cual es característico del lenguaje natural. El carácter más utilizado resulta ser el ``\_'' (espacio), en concordancia con la regla gramatical que establece su uso para separar palabras. Esta estructura genera una entropía intermedia de 4.26 bits/símbolo (0.79 normalizada), permitiendo al algoritmo de Huffman asignar códigos más cortos a los símbolos de mayor frecuencia. Gracias a ello, se obtiene una longitud promedio de 4.27 bits/símbolo y una reducción de memoria del 28.31\%. En este caso, puede apreciarse claramente cómo la redundancia inherente al lenguaje natural puede aprovecharse para comprimir información de manera eficiente.
-
+    \begin{multicols}{2}
+        
     Finalmente, en el archivo tabla.txt, al tratarse de una tabla de valores, predominan los caracteres numéricos y los signos de puntuación. A diferencia del caso anterior, esta distribución no responde a patrones lingüísticos, sino a una organización propia de la información numérica. En este caso se logra la mayor compresibilidad, alcanzando una reducción del 41.30\%. Esto se debe a que la frecuencia está dominada por unos pocos caracteres que concentran la mayoría de las apariciones, lo cual reduce la entropía a 3.46 bits/símbolo (0.64 normalizada) y permite obtener la mayor eficiencia de codificación entre los textos analizados.
 
     En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion influyendo directamente en su compresibilidad.
+
+    Así como tomamos a una minúscula y una mayúscula como fuente de la misma información, otra consideración que podría surgir es ser tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información). E ignorar caracteres de puntuación como $\left\{\text{``.'', ``,'', ``:'', ``;''}, \dots \right\}$. En muchos casos la ausencia de una acentuación puede dificultar la compresión pero no la imposibilita, y usualmente con el contexto se puede decifrar facilmente la intención trasmitida. Otro caso es el de la puntuación, en donde una sola coma puede cambiar totalmente esa intención.
+
+    Con el objetivo de una comparación extremista, realizamos los mismos cálculos para las versiones ``restringidas'' de los textos en los que la puntuación es ignorada y los caracteres con diacríticos son equivalentes al caracter sin este. En la Figura~\ref{fig:character_strict_pmf} se encuentra la representación gráfica de la PMF de esta versión.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.45\textwidth]{figures/character_strict_pmf.png}
+        \caption{Función de masa de probabilidad de los caracteres de cada uno de los textos de ejemplo (versión ``restringida'')}
+        \label{fig:character_strict_pmf}
+    \end{figure}
+
+\end{multicols}
+        \begin{table}[H]
+        \centering
+        \footnotesize
+        \begin{tabular}{lllllll}
+            \toprule
+            & 
+            \textbf{Entropía} & 
+            \textbf{Entropía} & 
+            \textbf{Símbolos} & 
+            \textbf{Longitud} & 
+            \textbf{Longitud} & 
+            \textbf{Reducción}  
+            \\
+            & 
+            & 
+            \textbf{Normalizada} & 
+            \textbf{Únicos} & 
+            \textbf{Promedio} & 
+            \textbf{Uniforme Mínima}  & 
+            \textbf{de Memoria} \\ 
+            & 
+            {\tiny$H$ [bits/símbolo]} & 
+            {\tiny$\eta \in [0,1]$} & 
+            {\tiny$N$ [cantidad]} & 
+            {\tiny$L$ [bits/símbolo]} & 
+            {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
+            {\tiny$R$ [\%]} \\
+            \midrule
+            {\smaller\textbf{adn.txt}} & 1.999999 & 1.000000 & 4 & 2.000000 & 2 & 0.000000 \\
+            \midrule
+            {\smaller\textbf{mitología.txt}} & 3.517115 & 0.748252 & 26 & 3.302169 & 5 & 33.956622 \\
+            \midrule
+            {\smaller\textbf{tabla.txt}} & 2.546965 & 0.492650 & 36 & 2.265255 & 6 & 62.245757 \\
+            \bottomrule
+        \end{tabular}
+        \caption{Resumen de los cálculos de las medidas para los textos de ejemplo (versión ``restringida'')}
+        \label{tab:calcs_strict}
+    \end{table}
+
+\begin{multicols}{2}
+    
+    {\color{red} Comparación con la versión de los textos restringida}
 
 \end{multicols}
 
