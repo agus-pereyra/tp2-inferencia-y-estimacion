@@ -70,7 +70,7 @@
 
 \section*{Abstract}
 
-En este presente trabajo se aborda experimentalmente este principio, investigando cómo se desempeña en la práctica el algoritmo de \textbf{Codificación de Huffman}, donde se investiga cómo la capacidad predictiva de una fuente determina su potencial compresión, esto se hace mediante el análisis de textos con propiedades de ocurrencia de caracteres radicalmente diferentes (lenguaje natural, datos estructurados y secuencias genómicas), además de demostrarse empíricamente la optimalidad de este método. Los resultados cuantifican la eficiencia del algoritmo, que minimiza la longitud de codificación promedio \dots ({\color{red} \textbf{Aca van el resto de los resultados}})
+Este trabajo investiga la relación fundamental entre la \textit{distribución probabilística} de los datos y su límite teórico de compresibilidad, la \textbf{entropía}. Mediante la utilización del algoritmo de \textbf{Codificación de Huffman} en textos con distribución de caracteres distintas, como lenguaje natural, tabla de datos o secuencias de \texttt{ADN}. Se cuantifica experimentalmente su eficiencia y se compara con algoritmos de comprensión uniforme. Los resultados demuestran que el rendimiento de la compresión está directamente determinado por la redundancia de la fuente, logrando una reducción de memoria de hasta un 41.4\% en textos con baja entropía, mientras que es nula en datos con distribución uniforme. Esto confirma que la codificación de Huffman genera una longitud promedio de código que se aproxima al límite establecido por la entropía, destacando un principio fundamental de la \textit{Teoría de la Información}.
 
 \vspace{10pt}
 
@@ -82,7 +82,58 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
     \begin{multicols}{2}
 
-    En la era del \textbf{Big Data}, obtener capacidad de representar información de manera concisa y compacta es un desafío fundamental. La \textit{Teoría de la Información}, la cual comenzó \textbf{Claude Shannon}, postula que la compresibilidad de cualquier dato está intrínsecamente limitada por su contenido de incertidumbre, esta medida es cuantificable, y es conocida como \textit{entropía}. 
+    Vivimos en un mundo donde la información crece exponencialmente, en la era del \textit{Big Data} cada día se generan millones de textos, imágenes, videos y datos de todo tipo. En este contexto, nos surge un desafío: \textit{¿Cómo podemos almacenar y transmitir toda esta información de manera eficiente y compacta?}. En trabajos previos hemos abordado este problema a partir de la reducción dimensional mediante técnicas como \texttt{PCA}, metodo que permite representar datos complejos, como matrices, en espacios de menor dimension, y asi compactar su peso en memoria sin gran perdida en representatividad. Ahora, al tratar con textos, el desafío es similar pero más estricto, necesitamos \textbf{comprimir} la información sin perder ni un solo carácter.
+
+    \
+
+    Este problema fue abordado, hace 70 años, por \textbf{Claude Shannon}, quien interpretó la \textbf{Teoría de la Información} y brindó un límite teórico fundamental para la compresión de datos. Este límite está directamente relacionado con la \textbf{entropía} de la fuente de datos, que representa una medida de su incertidumbre o "sorpresa" promedio. Para una fuente $\mathbf{X}$ con $N$ símbolos únicos de probabilidad $p(x_i)$, la entropía se define como:
+
+    \begin{equation}
+        H(\mathbf{X}) = -\sum_{i=1}^{N}p(x_i)\log_2(p(x_i))
+        \label{eq:entropy}
+    \end{equation}
+
+    En esencia, la entropía $H(\mathbf{X})$ indica la cantidad mínima de bits necesarios, en promedio, para codificar cada símbolo de la fuente sin perder información. La demostración de Shannon establece que ningún algoritmo de compresión puede lograrlo con menos de $H(\mathbf{X})$ bits por símbolo en promedio.
+
+    Esta limitación teórica tiene implicaciones prácticas en, por ejemplo, textos de lenguaje natural. Consideremos un texto en español, donde ciertas letras como ``\texttt{e}'' o ``\texttt{a}'' aparecen con mucha más frecuencia que otras como ``\texttt{q}'' o ``\texttt{z}'', o ciertos símbolos como ``\texttt{\$}'' o ``\texttt{\%}''. Esta \textit{distribución no uniforme} de los símbolos implica que el texto tiene \textbf{redundancia}, es decir, gran parte de su contenido es repetitivo y \textbf{predecible}.
+
+    Precisamente en esta redundancia se basa la \textbf{Codificación de Huffman}, un método que aprovecha las frecuencias de cada símbolo para asignar códigos más cortos a símbolos comunes. El desempeño de este método se mide a través de la \textbf{longitud promedio de codificación}, $L(\mathbf{X})$, que es el costo esperado en bits por símbolo, calculado como:
+
+    \begin{equation}
+        L(\mathbf{X}) = \sum_{i=1}^{N} p(x_i)\ell(x_i)
+        \label{eq:avg_length}
+    \end{equation}
+
+    donde $\ell(x_i)$ es la longitud del código para el símbolo $x_i$. Esta longitud promedio siempre estará acotada por la entropía, lo que nos permite evaluar su cercanía al óptimo teórico:
+    \begin{equation}
+        H(\mathbf{X}) \leq L(\mathbf{X}) < H(\mathbf{X}) + 1
+        \label{eq:avg_length_bound}
+    \end{equation}
+
+    Para cuantificar el valor exacto que estamos ganando al utilizar este método, comparamos $L(\mathbf{X})$ con una codificación de referencia que no siempre es óptima (únicamente óptima en el caso que se maximice la entropía), como la \textit{Codificación Uniforme}. Esta codificacion asigna a cada símbolo un código de la misma longitud fija, conocida como \textbf{longitud uniforme mínima}, y se calcula como:
+
+    \begin{equation}
+        L_{\text{unif}}(\mathbf{X}) = \lceil \log_2 (N) \rceil
+        \label{eq:unif}
+    \end{equation}
+
+    La efectividad, o eficiencia, del algoritmo de Huffman se puede medir entonces como el porcentaje de \textbf{reducción de memoria}:
+
+    \begin{equation}
+        R(\mathbf{X}) = \left(1 - \frac{L(\mathbf{X})}{L_{\text{unif}}(\mathbf{X})}\right) \times 100\%
+        \label{eq:reduction}
+    \end{equation}
+
+    \
+
+    Un problema que surge es que necesito comparar cadenas de textos con distintos tamaños de alfabetos $\Sigma$. Para solucionar este problema definimos una medida de incertidumbre normalizada, la \textbf{entropía normalizada de Shannon}, la cual se define como:
+
+    \begin{equation}
+        \eta(\mathbf{X}) = \frac{H(\mathbf{X})}{\log_2(N)}
+        \label{eq:norm_entropy}
+    \end{equation}
+
+    Este trabajo busca validar experimentalmente estos principios. Nuestra hipótesis es que la efectividad del algoritmo de Huffman, medida por $R(\mathbf{X})$, es directamente proporcional a la redundancia de la fuente. Principalmente esperamos que sea significativamente más efectivo en textos de lenguaje natural que en secuencias con distribuciones más uniformes, donde la entropía se maximiza. A través de este análisis, ilustraremos de forma práctica cómo la estructura probabilística de los datos determina no solo \textit{si} podemos comprimirlos, sino también \textit{cuánto}.
 
     \end{multicols}
 
@@ -92,11 +143,26 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
 
 \section{Desarrollo Experimental}
 
-    \begin{multicols}{2}
+\begin{multicols}{2}
 
-    \subsection{Estimación del Modelo probabilístico de la Fuente}
+    La metodología se dividió en tres pasos principales: primero, estimamos el modelo probabilístico de cada fuente basándonos en las frecuencias reales de sus símbolos; luego, aplicamos el algoritmo de Huffman otorgado por la Cátedra para generar los códigos binarios necesarios; y por último, realizamos un análisis detallado utilizando las métricas de desempeño que definimos antes, con el fin de comparar los distintos textos.
 
-        El primer paso en la implementación de la \textbf{codificación de Huffman} es estimar el modelo probabilístico de la fuente (texto). Esto se logra mediante el análisis de la frecuencia de aparición de cada símbolo en el conjunto de datos. La probabilidad estimada del $i$-ésimo símbolo \( s_i \) con su frecuencia asociada $f_i$ se calcula como:
+    \subsection{Fuentes de Datos}
+
+        Para probar nuestra hipotesis de cómo la distribución de símbolos influye en la compresibilidad, la Cátedra nos dio tres textos con características muy distintas. El primero es una secuencia de ADN (\texttt{adn.txt}), que es el caso más sencillo: un alfabeto de solo 4 símbolos (adenina, citosina, guanina y timina, representados como `a', `c', `g' y `t').
+
+        En el otro extremo, tenemos un texto de lenguaje natural, un fragmento sobre mitología en \textit{español} (\texttt{mitologia.txt}). Aquí el alfabeto crece para incluir las 27 letras del español, números, signos de puntuación y espacios. A diferencia del ADN, el lenguaje natural no tiene una distribución uniforme, sino que sigue patrones lingüísticos que todos conocemos.
+
+        Finalmente, hay un caso intermedio que no es tan obvio, se trata de un archivo de datos estructurados en formato JSON (como \texttt{tabla.txt}). Este archivo mezcla texto, números decimales y símbolos especiales del formato (como \{, \}, :, ,, etc.). A diferencia de un texto narrativo, su estructura sigue reglas muy estrictas de formato, lo que crea una distribución de símbolos distinta tanto del ADN como del lenguaje natural. No es fácil predecir cuánto se puede comprimir sin hacer el análisis.
+
+        Cada una de estas fuentes se procesó siguiendo la metodología que describimos a continuación, lo que nos permitió comparar cómo la naturaleza de la fuente influye en su límite de compresión.
+
+    \subsection{Modelo probabilístico de la Fuente}
+
+
+        El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este diccionario constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}. 
+
+        En general, la probabilidad estimada del $i$-ésimo símbolo \( s_i \) con su frecuencia asociada $f_i$ se calcula como:
 
         \begin{equation}
             p(x_i) = \frac{f_i}{M}
@@ -104,21 +170,20 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
         \end{equation}
 
         donde cada caracter es una de las $N$ realizaciones totales de la variable aleatoria fuente \( S \) y $M=\sum_{j=1}^{N} f_j$, en otras palabras la longitud total de la fuente.
-        El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este diccionario constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}. 
 
-        Es de interés aclarar que en este informe no se realiza un distinción entre mayúsculas y minúsculas, ya que el objetivo principal es reducir el tamaño del texto manteniendo su compresibilidad. La información que aporta una diferenciación entre mayúscula y minúscula es muy pequeña al lado de la complejidad que le aporta a la codificación de Hoffman. La ausencia de mayusculas al inicio de las oraciones no afecta la comprensión, por lo que no se considera prescindible. No obstante, posteriormente podria aplicarse un algoritmo que reemplace automáticamente por mayusculas las letras que sigan a un punto (``.'').
+        \
+        
+        La utilidad y desarrollo de esta etapa pueden variar dependiendo del objetivo de la compresión. Por ejemplo, si el objetivo es maximizar la compresión de una novela, podría optarse por no contar las mayúsculas, ya que no afectan significativamente la estructura del texto. En contraste, en lenguajes de programación donde las mayúsculas son relevantes (como en identificadores de una variable global vs. local), este enfoque no sería apropiado. En este informe se trataran diversas configuraciones de mayúsculas y minúsculas para cuantificar la compresibilidad en cada caso. 
 
-        Las caracteristicas del resultado de la Ecuación~\eqref{eq:prob} se basan en los \textbf{Axiomas de la Probabilidad}, es decir, la suma de los $p_i$ es igual a 1, $\sum_{i=1}^N p_i = 1$, la probabilidad de un evento puntual es mayor a cero, $\mathbb{P}(p_i) \geq 0$, y si  $A \cap B = \emptyset \Rightarrow \mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B)$
+    \subsection{Implementación del Algoritmo de Huffman}
 
-    \subsection{Codificación de Huffman}
+    Luego de obtener el modelo probabilístico de la fuente, generamos un conjunto de códigos binarios utilizando el algoritmo de \textbf{Codificación de Huffman}. La característica que diferencia este código de otros universales como el \textit{código Morse} es que ninguna cadena de código asignada a algún símbolo es prefijo de otra. A esta propiedad se la conoce como \textit{prefix-free}, y es gracias a esto que su decodificación es inmediata.
 
-    La característica que diferencia este código de otros universales como el \textit{código Morse} es que ninguna cadena de código asignada a algún símbolo es prefijo de otra. A esta propiedad se la conoce como \textit{prefix-free} y es gracias a esto que su decodificación es inmediata.
+    \
 
-    El código se construye como un árbol binario, cuyas hojas representan un símbolo y a cada rama un elemento binario. Los caracteres de menor frecuencia se encuentran en los mayores niveles de profundidad del árbol, lo que tiene sentido porque lo más frecuentes serán los más rápidos de decodificar y esto es justamente lo que buscamos.
-
-    \subsection{Construcción del Árbol de Huffman}
+    Para lograr esto, el código se construye como un árbol binario, cuyas hojas representan un símbolo y a cada rama un elemento binario. Los caracteres de menor frecuencia se encuentran en los mayores niveles de profundidad del árbol, lo que tiene sentido porque los más frecuentes serán los más rápidos de decodificar, y esto es justamente lo que buscamos.
     
-    El árbol es generado de la forma que es representado en el Algoritmo~\ref{algorithm:huffman_code}, se añaden los símbolos de menor a mayor frecuencia en el árbol creando subárboles de manera que la frecuencia del nodo padre es la suma de la frecuencia de sus hijos. De esta menera, iterativamente se van uniendo los subárboles dejando una estructura como la de la Figura~\ref{fig:huffman_tree}
+    El árbol se genera de la forma representada en el Algoritmo~\ref{algorithm:huffman_code}: se añaden los símbolos de menor a mayor frecuencia, creando subárboles de manera que la frecuencia del nodo padre es la suma de la frecuencia de sus hijos. De esta manera, iterativamente se van uniendo los subárboles, dejando una estructura como la de la Figura~\ref{fig:huffman_tree}.
 
     \begin{algorithm}[H]
     \small
@@ -175,84 +240,43 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
             \node[nodelabel, below=-1pt of D] {b};
             \node[nodelabel, below=-1pt of B] {a};
         \end{tikzpicture}
-        \caption{Árbol de Huffman para la cadena $S=$``abcdabcaba''}
+        \caption{Ejemplo de un Árbol de Huffman para la cadena $S=$``abcdabcaba''}
         \label{fig:huffman_tree}
-    \end{figure}
+    \end{figure}
 
     \subsection{Medidas de Desempeño y Análisis Cuantitativo}
 
-        Dada una cadena $\mathbf{X}$ de $N$ caracteres $x_i$ únicos y la distribución de probabilidad de los caracteres $p(x_i)$ se realiza la codificación de Huffman para $\mathbf{X}$, de la cual podemos obtener la longitud del código binario para cada símbolo, $\ell(x_i)$. Es de estos datos sencillos de obtener de donde, a partir de ciertos cálculos, es posible estudiar cuantitativamente y procesar la información de cualquier cadena. A continuación algunas descripciones de estas medidas:
+        Una vez que tenemos la codificación de Huffman generada para cada cadena $\mathbf{X}$ de $N$ caracteres $x_i$ únicos, con su respectiva distribución de frecuencias, necesitamos métricas concretas que nos permitan evaluar su efectividad. En la Introducción definimos formalmente cada una de estas medidas; ahora explicaremos cómo interpretarlas en el contexto práctico de nuestro análisis.
 
         \subsubsection*{Longitud Promedio de Codificación}
-            Es definida como la esperanza de la longitud del código de la cadena y su cálculo es simplemente el costo promedio en bits por símbolo, es decir representa la longitud media del código de cada caracter.
 
-            \begin{equation}
-                L(\mathbf{X}) = \mathbb{E}[\ell(\mathbf{X})]=\sum_{i=1}^{N} p(x_i)\ell(x_i)
-                \label{eq:avg_length}
-            \end{equation}
+            La longitud promedio $L(\mathbf{X})$ (Ecuación~\eqref{eq:avg_length}) es definida como la esperanza de la longitud del código de la cadena y su cálculo es simplemente el costo promedio en bits por símbolo. Es la métrica central que nos indica qué tan compacta es nuestra codificación.
 
             Con este podemos darnos una idea de qué tan complejo es la codificación que nos aporta el algoritmo de Huffman. A mayor $L$, podemos inferir 2 posibles casos, que haya una gran cantidad de caracteres y por lo tanto el árbol binario es de una mayor profundidad o simplemente que la codificación sea ineficiente en términos de compresión.
+
+        \subsubsection*{Longitud Uniforme Mínima}
+
+            La longitud uniforme $L_{\text{unif}}(\mathbf{X})$ (Ecuación~\eqref{eq:unif}) expresa la mínima cantidad de bits por símbolo necesaria para una codificación uniforme, es decir que no tiene en cuenta la frecuencia de aparición de cada uno de los símbolos.
+
+            Es muy útil a la hora de evaluar la efectividad de la codificación de Huffman de manera que si $L < L_\text{unif}$, ciertamente el algoritmo explota la redundancia de la cadena. 
+
+        \subsubsection*{Reducción de Memoria}
         
-            \subsubsection*{Longitud Uniforme Mínima de Codificación}
+            El porcentaje de reducción $R(\mathbf{X})$ (Ecuación~\eqref{eq:reduction}) es el porcentaje relativo de ahorro de memoria que aporta la codificación se puede estimar comparando $L$ con $L_\text{unif}$.
             
-                Este expresa la mínima cantidad de bits por símbolo necesaria para una codificación uniforme, es decir que no tiene en cuenta la frecuencia de aparación de cada uno de los símbolos.
+            Notar que, un valor cercano a 0\% significa que la codificación de Huffman no aporta ventajas significativas sobre el método uniforme, lo que sucede cuando el texto tiene una distribución muy uniforme de caracteres. Por el contrario, valores altos (cercanos a 100\%) indican una compresión muy efectiva, típica de textos con alta redundancia. Es importante notar que si $L \geq L_\text{unif}$, entonces $R \leq 0\%$, lo que confirmaría que Huffman no es apropiado para esa fuente. Esto es, en gran parte, los fundamentos de la hipotesis que buscamos validar.
 
-                \begin{equation}
-                    L_{\text{unif}}(\mathbf{X}) = \lceil \log_2 (N) \rceil
-                    \label{eq:unif}
-                \end{equation}
+        \subsubsection*{Entropía de Shannon}
 
-                Es muy útil a la hora de evaluar la efectividad de la codificación de Huffman de manera que si $L < L_\text{unif}$, ciertamente el algoritmo explota la redundancia de la cadena. 
+            La entropía $H(\mathbf{X})$ (Ecuación~\eqref{eq:entropy}) nos da el límite teórico absoluto, es decir, la cantidad mínima de bits por símbolo que cualquier algoritmo de compresión sin pérdida podría alcanzar para este texto. 
             
-            \subsubsection*{Reducción de Memoria}
-            
-                Con las dos definiciones anteriores, el porcentaje relativo de ahorro de memoria que aporta la codificación se puede estimar mediante la siguiente ecuación
+            Una forma que aporta gran valor a nuestro analisis es la interpretación de este valor usando su relación con la longitud promedio de codificación, dada por la Ecuación~\eqref{eq:avg_length_bound}. Esta desigualdad nos permite evaluar la eficiencia de la codificación de Huffman, dándonos un límite inferior para $L$. En caso de que sean iguales, la codificación tiene una eficiencia máxima, y en el caso contrario en que $L>H$ se confirma que existe cierta redundancia en la cadena.
 
-                \begin{equation}
-                    R(\mathbf{X}) = \left(1 - \frac{L(\mathbf{X})}{L_{\text{unif}}(\mathbf{X})}\right) \times 100\%
-                    \label{eq:reduction}
-                \end{equation}
-            
-            \subsubsection*{Entropía de Shannon}
+        \subsubsection*{Entropía Normalizada}
 
-                Es de interés determinar la incertidumbre de una cadena a partir de la información esperada que es necesaria almacenar por cada caracter.
-
-                \begin{equation}
-                    H(\mathbf{X}) = -\sum_{i=1}^{N}p(x_i)\log_2(p(x_i))
-                    \label{eq:entropy}
-                \end{equation}
-                
-                En otras palabras, está definida como la $\mathbb{E}[I(x_i)]$ donde $I(x_i)$ es la información en bits del $i$-ésimo símbolo. 
-
-                Una forma de interpretar este valor es usando su relación con la longitud promedio de codificación, dado que este está acotado por el primero:
-
-                \begin{equation}
-                    H(\mathbf{X}) \leq L(\mathbf{X}) < H(\mathbf{X}) + 1
-                    \label{eq:avg_length_bound}
-                \end{equation}
-
-                en caso de que sean iguales, la codificación tiene una eficiencia máxima, y en el caso contrario en que $L>H$ se confirma que existe cierta redundancia en la cadena.
-
-
-            \subsubsection*{Entropia de Shannon Normalizada}
-
-                El problema de la medida anterior es que se encuentra escalada respecto a la cantidad de símbolos únicos $(N)$ de la cadena, es por eso que a la hora de realizar comparaciones entre cadenas de diferentes $N$ es necesario utilizar la versión normalizada (Ecuación~\eqref{eq:norm_entropy}).
-        
-                \begin{equation}
-                    \eta(\mathbf{X}) = \frac{H(S)}{\log_2(N)}
-                    \label{eq:norm_entropy}
-                \end{equation}
-
-                donde $\eta \in [0,1]$ tal que en sus valores extremos $\eta=1$ evidencia una incertidumbre total o una distribución totalmente uniforme de los símbolos, mientras que en $\eta=0$ la cadena sería una repetición continua de un solo caracter.
-
-
-            \subsection{Archivos y procedimiento}
-
-             Para poder darle una noción numérica a todo lo conceptualizado en este trabajo se hizo uso de tres archivos de texto de naturaleza diferente con el objetivo de notar una diferencia significativa a la hora de aplicar la teoría en su comparación. En un breve resumen, \textit{adn.txt} es una secuencia de nucleótidos representada solo por 4 caracteres, \textit{mitología.txt} es una descripción y relato sobre la mitología y por último, \textit{tabla.txt} es un archivo en formato \texttt{.json} con datos en su mayoría flotantes y otros como fechas.
-
-             Estos textos seran sometidos a programas que calcularan datos relevantes para realizar un profundo analisis del cual esperamos obtener valiosas concluciones.
-            
-            \end{multicols}
+           El problema de la medida anterior es que se encuentra escalada respecto a la cantidad de símbolos únicos $(N)$ de la cadena, es por eso que a la hora de realizar comparaciones entre cadenas de diferentes $N$ es necesario utilizar la versión normalizada (Ecuación~\eqref{eq:norm_entropy}), donde $\eta \in [0,1]$ tal que en sus valores extremos $\eta=1$ evidencia una incertidumbre total o una distribución totalmente uniforme de los símbolos, mientras que en $\eta=0$ la cadena sería una repetición continua de un solo caracter.
+    
+    \end{multicols}
 
 
 
@@ -328,7 +352,7 @@ En este presente trabajo se aborda experimentalmente este principio, investigand
     {\color{red} Esto lo pasaria a la conclucion principalmente xq no lo vamos a mencionar en el desarrollo exprimental. Aparte que es un analisis que conseguimos a partir del analisis.}
 
 
-    Del analisis pudimos observar que la naturaleza del contenido tiene una fuerte correlacion con su compresibilidad. Tambien podemos observar como el conocer datos sobre el texto a codificar permite realizar "modificaciones" al algoritmo para una mayor ventaja. Aun teniendo en cuenta que cuando queremos aplicar Hoffman \textbf{no se debe perder absolutamente nada de informacion} esto no significa necesariamente que el mensaje reconstruido sea el mismo. El mejor ejemplo es el alplicado en este informe de tomar la decision de no diferenciar mayusculas de minusculas. En un texto natural es posible identificarlas con un progrma simple que las reemplaze luego de signos de puntuacion o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayusculas podrian ser una componente clave que cambie el significado del mensaje. 
+    Del analisis pudimos observar que la naturaleza del contenido tiene una fuerte correlacion con su compresibilidad. Tambien podemos observar como el conocer datos sobre el texto a codificar permite realizar "modificaciones" al algoritmo para una mayor ventaja. Aun teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de informacion} esto no significa necesariamente que el mensaje reconstruido sea el mismo. El mejor ejemplo es el alplicado en este informe de tomar la decision de no diferenciar mayusculas de minusculas. En un texto natural es posible identificarlas con un progrma simple que las reemplaze luego de signos de puntuacion o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayusculas podrian ser una componente clave que cambie el significado del mensaje. 
     Así como tomamos a una minúscula y una mayúscula como fuente de la misma información, otra consideración que podría surgir es ser tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información). E ignorar caracteres de puntuación como $\left\{\text{``.'', ``,'', ``:'', ``;''}, \dots \right\}$. En muchos casos la ausencia de una acentuación puede dificultar la compresión pero no la imposibilita, y usualmente con el contexto se puede decifrar facilmente la intención trasmitida. Otro caso es el de la puntuación, en donde una sola coma puede cambiar totalmente esa intención por lo que no es posible realizar este arrelgo.
 
     Con el objetivo de una comparación extremista, realizamos los mismos cálculos para las versiones ``restringidas'' de los textos en los que la puntuación es ignorada y los caracteres con diacríticos son equivalentes al caracter sin este. En la Figura~\ref{fig:character_strict_pmf} se encuentra la representación gráfica de la PMF de esta versión. Podemos observar que funciona mejor en el caso de mitologia logrando una mayor reduccion de memoria. Sin embargo, en el caso de la tabla por mas que parezca que se observa una mejora esto es totalmente falso. Al perder los signos de puntuacion ya no es posible diferencias decimales por lo que el texto codificado se volvio totalmente obsoleto.
