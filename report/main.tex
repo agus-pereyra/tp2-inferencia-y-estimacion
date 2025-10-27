@@ -285,7 +285,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Análisis de Datos %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Análisis de Datos}
+\section{Análisis de Datos}\label{sec:analisis}
 
 \begin{multicols}{2}
 
@@ -350,14 +350,22 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion influyendo directamente en su compresibilidad.
 
-    {\color{red} Esto lo pasaria a la conclucion principalmente xq no lo vamos a mencionar en el desarrollo exprimental. Aparte que es un analisis que conseguimos a partir del analisis.}
+
+\end{multicols}
+
+{\sectionrule}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusión %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusión}
+
+    \begin{multicols}{2}
 
 
-    Del analisis pudimos observar que la naturaleza del contenido tiene una fuerte correlacion con su compresibilidad. Tambien podemos observar como el conocer datos sobre el texto a codificar permite realizar "modificaciones" al algoritmo para una mayor ventaja. Aun teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de informacion} esto no significa necesariamente que el mensaje reconstruido sea el mismo. El mejor ejemplo es el alplicado en este informe de tomar la decision de no diferenciar mayusculas de minusculas. En un texto natural es posible identificarlas con un progrma simple que las reemplaze luego de signos de puntuacion o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayusculas podrian ser una componente clave que cambie el significado del mensaje. 
+    Del analisis pudimos observar que la naturaleza del contenido tiene una fuerte correlacion con su compresibilidad. Tambien podemos observar como el conocer en profundidad el texto a codificar permite realizar modificaciones al algoritmo para una mayor ventaja. Aun teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de informacion}, esto no significa necesariamente que el mensaje reconstruido sea el mismo. El mejor ejemplo es el alplicado en este informe de tomar la decision de no diferenciar mayusculas de minusculas. En un texto natural es posible identificarlas con un progrma simple que las reemplaze luego de signos de puntuacion o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayusculas podrian ser una componente clave que cambie el significado del mensaje. 
     Así como tomamos a una minúscula y una mayúscula como fuente de la misma información, otra consideración que podría surgir es ser tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información). E ignorar caracteres de puntuación como $\left\{\text{``.'', ``,'', ``:'', ``;''}, \dots \right\}$. En muchos casos la ausencia de una acentuación puede dificultar la compresión pero no la imposibilita, y usualmente con el contexto se puede decifrar facilmente la intención trasmitida. Otro caso es el de la puntuación, en donde una sola coma puede cambiar totalmente esa intención por lo que no es posible realizar este arrelgo.
 
-    Con el objetivo de una comparación extremista, realizamos los mismos cálculos para las versiones ``restringidas'' de los textos en los que la puntuación es ignorada y los caracteres con diacríticos son equivalentes al caracter sin este. En la Figura~\ref{fig:character_strict_pmf} se encuentra la representación gráfica de la PMF de esta versión. Podemos observar que funciona mejor en el caso de mitologia logrando una mayor reduccion de memoria. Sin embargo, en el caso de la tabla por mas que parezca que se observa una mejora esto es totalmente falso. Al perder los signos de puntuacion ya no es posible diferencias decimales por lo que el texto codificado se volvio totalmente obsoleto.
-    
+    Con el objetivo de una comparación extremista, realizamos los mismos cálculos para las versiones ``restringidas'' de los textos en los que la puntuación es ignorada y los caracteres con diacríticos son equivalentes al caracter sin este. En la Figura~\ref{fig:character_strict_pmf} se encuentra la representación gráfica de la PMF de esta versión.
 
     \begin{figure}[H]
         \centering
@@ -406,19 +414,19 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
         \label{tab:calcs_strict}
     \end{table}
 
+
+
+
+
+
 \begin{multicols}{2}
     
-    {\color{red} Comparación con la versión de los textos restringida}
+    Nuestro experimento con versiones “restringidas” de los textos, confirma la utilidad de estas modificaciones en ciertos casos.  En el texto de mitología la longitud promedio disminuye sensiblemente y la reducción de memoria aumenta, lo que implica que la información redundante asociada a la capitalización y a la acentuación puede aprovecharse para acortar los códigos.  Sin embargo, en \textit{tabla.txt} este procedimiento resulta contraproducente: al eliminar puntos y comas se pierde la referencia decimal y el valor de los números se distorsiona, de modo que la cadena reconstruida deja de ser fiable.  Este ejemplo ilustra que las optimizaciones deben evaluarse en función del contexto; un carácter que parece “redundante” en un tipo de texto puede ser imprescindible en otro.
 
-\end{multicols}
+    En resumen, la compresibilidad no es una propiedad intrínseca de un algoritmo sino una interacción entre éste y la estructura de los datos.  Las fuentes uniformes son incomprensibles, los textos naturales contienen cierta redundancia explotable y los datos altamente estructurados pueden compactarse de manera notable.  Además, pequeñas transformaciones en la representación —como unificar letras mayúsculas y minúsculas o ignorar acentos— permiten aumentar la eficiencia cuando se conoce el dominio de aplicación y se garantiza que el significado no se ve comprometido.  Estas consideraciones subrayan la importancia de combinar técnicas de teoría de la información con conocimiento contextual para desarrollar métodos de compresión realmente adaptados a cada tipo de fuente.
 
-{\sectionrule}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusión %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Conclusión}
-
-    \begin{multicols}{2}
 
     \end{multicols}
 
