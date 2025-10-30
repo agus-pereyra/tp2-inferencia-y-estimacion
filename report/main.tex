@@ -146,13 +146,13 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
 \begin{multicols}{2}
     
-    Nuestra metodología se dividió en tres pasos principales. Primero, estimamos el modelo probabilístico de cada fuente, basándonos en las frecuencias de sus símbolos. Luego, aplicamos el algoritmo de Huffman que nos proporcionó la Cátedra para generar los códigos binarios necesarios. Finalmente, hicimos un análisis detallado usando las métricas de desempeño que definimos antes, con el objetivo de comparar los distintos textos.
+    Nuestra metodología se dividió en tres pasos principales. Primero, estimamos el modelo probabilístico de cada fuente, basándonos en las frecuencias de sus símbolos. Luego, aplicamos el algoritmo de Huffman para generar los códigos binarios necesarios. Finalmente, hicimos un análisis detallado usando las métricas de desempeño que definimos antes, con el objetivo de comparar los distintos textos.
 
     \subsection{Fuentes de Datos}
 
-        Para probar nuestra hipotesis de cómo la distribución de símbolos influye en la compresibilidad, la Cátedra nos dio tres textos con características muy distintas. El primero es una secuencia de ADN (\texttt{adn.txt}), que es el caso más sencillo: un alfabeto de solo 4 símbolos (adenina, citosina, guanina y timina, representados como `\texttt{a}', `\texttt{c}', `\texttt{g}' y `\texttt{t}').
+        Para probar nuestra hipotesis de cómo la distribución de símbolos influye en la compresibilidad, trabajamos con tres textos con características muy distintas. El primero es una secuencia de ADN (\texttt{adn.txt}), que es el caso más sencillo: un alfabeto de solo 4 símbolos (adenina, citosina, guanina y timina, representados como `\texttt{a}', `\texttt{c}', `\texttt{g}' y `\texttt{t}').
 
-        En el otro extremo, tenemos un texto de lenguaje natural, un fragmento sobre mitología en \textit{español} (\texttt{mitologia.txt}). Aquí el alfabeto crece para incluir las 27 letras del español, números, signos de puntuación y espacios. A diferencia del ADN, el lenguaje natural no tiene una distribución uniforme, sino que sigue patrones lingüísticos que todos conocemos.
+        En el otro extremo, tenemos un texto de lenguaje natural, un fragmento sobre mitología en \textit{español} (\texttt{mitologia.txt}). Aquí el alfabeto crece para incluir las 27 letras del español, números, signos de puntuación y espacios. 
 
         Finalmente, hay un caso intermedio que no es tan obvio, se trata de un archivo de datos estructurados en formato JSON (como \texttt{tabla.txt}). Este archivo mezcla texto, números decimales y símbolos especiales del formato (como \texttt{ \{ }, \texttt{ \} }, \texttt{:}, \texttt{,}, etc.). A diferencia de un texto narrativo, su estructura sigue reglas muy estrictas de formato, lo que crea una distribución de símbolos distinta tanto del ADN como del lenguaje natural. No es fácil predecir cuánto se puede comprimir sin hacer el análisis.
 
