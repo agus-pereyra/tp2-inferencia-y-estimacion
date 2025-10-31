@@ -83,11 +83,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \begin{multicols}{2}
 
-    Vivimos en un mundo donde la información crece exponencialmente, en la era del \textit{Big Data} cada día se generan millones de textos, imágenes, videos y datos de todo tipo. En este contexto, nos surge un desafío: \textit{¿Cómo podemos almacenar y transmitir toda esta información de manera eficiente y compacta?}. En trabajos previos hemos abordado este problema a partir de la reducción dimensional mediante técnicas como \texttt{PCA}, metodo que permite representar datos complejos, como matrices, en espacios de menor dimension, y asi compactar su peso en memoria sin gran perdida en representatividad. Ahora, al tratar con textos, el desafío es similar pero más estricto, necesitamos \textbf{comprimir} la información sin perder ni un solo carácter.
-
-    \
-
-    Este problema fue abordado, hace 70 años, por \textbf{Claude Shannon}, quien interpretó la \textbf{Teoría de la Información} y brindó un límite teórico fundamental para la compresión de datos. Este límite está directamente relacionado con la \textbf{entropía} de la fuente de datos, que representa una medida de su incertidumbre o ``sorpresa'' promedio. Para una fuente $\mathbf{X}$ con $N$ símbolos únicos de probabilidad $p(x_i)$, la entropía se define como:
+    Vivimos en una era donde la información crece a un ritmo sin precedentes. Cada día se generan millones de textos, imágenes, videos y datos de todo tipo que demandan constantemente un incremento de memoria disponible. En este contexto, nos surge un desafío: \textit{¿Qué tanto podemos comprimir la información sin tener ningun tipo de pérdida?}.  Este problema fue abordado, hace 70 años, por \textbf{Claude Shannon}, quien interpretó la \textbf{Teoría de la Información} y brindó un límite teórico fundamental para la compresión de datos. Este límite está directamente relacionado con la \textbf{entropía} de la fuente de datos, que representa una medida de su incertidumbre o ``sorpresa'' promedio. Bajo esta perspectiva, la información deja de ser un concepto abstracto y se convierte en una magnitud cuantificable: cuanto más predecible es una fuente, menos información aporta cada símbolo y, por ende, más fácilmente puede comprimirse. Para una fuente $\mathbf{X}$ con $N$ símbolos únicos de probabilidad $p(x_i)$, la entropía se define como:
 
     \begin{equation}
         H(\mathbf{X}) = -\sum_{i=1}^{N}p(x_i)\log_2(p(x_i))
@@ -349,7 +345,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
         
     En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion influyendo directamente en su compresibilidad.
 
-    Así como tomamos a una minúscula y una mayúscula como fuente de la misma información, otra consideración que podría surgir sería tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información). E ignorar caracteres de puntuación como $\left\{\text{`.', `,', `:', `;'}, \dots \right\}$. Esto es de interés en fuentes de lenguaje natural, en donde en muchos casos la ausencia de una acentuación puede dificultar la compresión pero no la imposibilita, y usualmente con el contexto se puede decifrar facilmente la intención trasmitida. La misma acción sobre los caracteres de puntuación es ciertamente controversial, en donde una sola coma puede cambiar totalmente esa intención.
+    Alternativamente, así como tomamos a una minúscula y una mayúscula como un mismo simbolo, otra consideración que podría surgir sería tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información).Adicionalmente se podria ignorar caracteres de puntuación como $\left\{\text{`.', `,', `:', `;'}, \dots \right\}$. Esto es de interés en fuentes de lenguaje natural, en donde en muchos casos la ausencia de una acentuación puede dificultar la comprensión. Usualmente con el contexto se puede decifrar facilmente la intención trasmitida. La misma acción sobre los caracteres de puntuación es ciertamente controversial, en donde una sola coma puede cambiar totalmente el significado. Un ejemplo seria la frase \textit{``No, soy inocente''} cuyo significado sin la coma es totalmente el opuesto.
     
     \begin{figure}[H]
         \centering
@@ -380,18 +376,9 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
         \label{tab:restringed_metrics}
     \end{table}
 
-    En esta modificación, los bits promedio de codificación por caracter bajan en casi 1.5 bits implicando una codificación más eficiente. La contraparte es que como de alguna manera de extraen los caracteres en general de menor frecuencia, se tiene una mayor redundancia. Se asemeja más a una cadena uniforme.
+    En esta modificación, los bits promedio de codificación por caracter bajan en casi 1.5 bits implicando una codificación más eficiente. Sin embargo, el mensaje puede haber sido alterado al descartar caracteres significativos como los signos de puntuación. 
 
-    Un ejemplo de las consecuencias que conlleva una práctica del estilo es con el siguiente fragmento del texto
     
-    \begin{quoting}
-        \centering
-        \small
-        (\dots) la mitologia no ha desaparecido se ha transfigurado las narrativas contemporáneas desde las sagas cinematograficas hasta los universos de comic reconfiguran arquetipos antiguos en tramas actuales
-    \end{quoting}
-    
-    Sin los signos de puntuación necesarios, al decodificar el texto se podría malinterpretar a qué sujeto se refieren algunos verbos, como el ejemplo de ``se ha trasnfigurado''.
-
 \end{multicols}
 
 \vfill
@@ -404,13 +391,9 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \begin{multicols}{2}
 
-    Del análisis pudimos observar que la naturaleza del contenido tiene una fuerte correlación con su compresibilidad. También podemos observar como el conocer en profundidad el texto a codificar permite realizar modificaciones al algoritmo para una mayor ventaja. Aún teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de información}, esto no significa necesariamente que el mensaje reconstruido sea el mismo.
-
-    El mejor ejemplo es el aplicado en este informe de tomar la decision de no diferenciar mayúsculas de minúsculas. En un texto natural es posible identificarlas con un programa simple que las reemplace luego de signos de puntuación o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayúsculas podrían ser una componente clave que cambie el significado del mensaje. 
-    
-    Nuestro experimento con una versión ``restringida'' de los textos muestra que eliminar ciertos caracteres puede tener efectos adversos incluso en los casos donde parecería inofensivo. En mitología.txt, la supresión de signos como las comas y los puntos altera la estructura del lenguaje y modifica el sentido de las oraciones, por lo que la cadena resultante deja de representar fielmente el texto original. De forma similar, en tabla.txt la eliminación de estos mismos caracteres borraría la referencia decimal y distorsionaría el valor de los números, haciendo que los datos pierdan precisión. Este resultado evidencia como \textit{un carácter que parece ``redundante'' en un contexto estadístico puede ser esencial para conservar la precisión gramatical}.
-    
-    En resumen, la compresibilidad no es una propiedad intrínseca de un algoritmo sino una interacción entre éste y la estructura de los datos. Las fuentes uniformes son incomprensibles, los textos naturales contienen cierta redundancia explotable y los datos altamente estructurados pueden compactarse de manera notable. Además, pequeñas transformaciones en la representación —como unificar letras mayúsculas y minúsculas o ignorar acentos— permiten aumentar la eficiencia cuando se conoce el dominio de aplicación y se garantiza que el significado no se ve comprometido. Estas consideraciones subrayan la importancia de combinar técnicas de teoría de la información con conocimiento contextual para desarrollar métodos de compresión realmente adaptados a cada tipo de fuente.
+    Del análisis pudimos observar que la naturaleza del contenido tiene una fuerte correlación con su compresibilidad. También logramos notar como el conocer en profundidad el texto a codificar permite realizar modificaciones al algoritmo para una mayor ventaja. Aún teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de información}, esto no significa necesariamente que el mensaje reconstruido sea el mismo (tal como en el ejemplo aplicado a las mayusculas y minusculas). No obstante, la supresión de ciertos signos puede distorsionar la información del mensaje por lo que se debe recordar que \textit{un carácter que parece ``redundante'' en un contexto especifico puede ser esencial para conservar la precisión de información en otro caso}.
+  
+    En resumen, la compresibilidad no es una propiedad intrínseca de un algoritmo sino una interacción entre éste y la estructura de los datos. Las fuentes uniformes son incomprensibles, los textos naturales contienen cierta redundancia explotable y los datos altamente estructurados pueden compactarse de manera notable. Además, pequeñas transformaciones en la representación permiten aumentar la eficiencia cuando se conoce el dominio de aplicación y se garantiza que el significado no se vea comprometido. Estas consideraciones subrayan la importancia de combinar técnicas de teoría de la información con conocimiento contextual para desarrollar métodos de compresión realmente adaptados a cada tipo de fuente.
 
     \end{multicols}
 
