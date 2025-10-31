@@ -87,7 +87,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \
 
-    Este problema fue abordado, hace 70 años, por \textbf{Claude Shannon}, quien interpretó la \textbf{Teoría de la Información} y brindó un límite teórico fundamental para la compresión de datos. Este límite está directamente relacionado con la \textbf{entropía} de la fuente de datos, que representa una medida de su incertidumbre o "sorpresa" promedio. Para una fuente $\mathbf{X}$ con $N$ símbolos únicos de probabilidad $p(x_i)$, la entropía se define como:
+    Este problema fue abordado, hace 70 años, por \textbf{Claude Shannon}, quien interpretó la \textbf{Teoría de la Información} y brindó un límite teórico fundamental para la compresión de datos. Este límite está directamente relacionado con la \textbf{entropía} de la fuente de datos, que representa una medida de su incertidumbre o ``sorpresa'' promedio. Para una fuente $\mathbf{X}$ con $N$ símbolos únicos de probabilidad $p(x_i)$, la entropía se define como:
 
     \begin{equation}
         H(\mathbf{X}) = -\sum_{i=1}^{N}p(x_i)\log_2(p(x_i))
@@ -111,7 +111,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
         \label{eq:avg_length_bound}
     \end{equation}
 
-    Para cuantificar el valor exacto que estamos ganando al utilizar este método, comparamos $L(\mathbf{X})$ con una codificación de referencia que no siempre es óptima (únicamente óptima en el caso que se maximice la entropía), como la \textit{Codificación Uniforme}. Esta codificacion asigna a cada símbolo un código de la misma longitud fija, conocida como \textbf{longitud uniforme mínima}, y se calcula como:
+    Para cuantificar el valor exacto que estamos ganando al utilizar este método, comparamos $L(\mathbf{X})$ con una codificación de referencia que no siempre es óptima (únicamente óptima en el caso que se maximice la entropía), como la \textit{Codificación Uniforme}. Esta codificacion asigna a cada símbolo un código de la misma longitud fija, conocida como \textbf{longitud uniforme mínima}, cuya fórmula está definida como:
 
     \begin{equation}
         L_{\text{unif}}(\mathbf{X}) = \lceil \log_2 (N) \rceil
@@ -127,7 +127,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \
 
-    Un problema que surge es que necesito comparar cadenas de textos con distintos tamaños de alfabetos $\Sigma$. Para solucionar este problema definimos una medida de incertidumbre normalizada, la \textbf{entropía normalizada de Shannon}, la cual se define como:
+    Un nuevo problema surge a la hora de necesitar comparar cadenas de textos con distintos tamaños de alfabetos $\Sigma$. Para solucionar este problema definimos una medida de incertidumbre normalizada, la \textbf{entropía normalizada de Shannon}:
 
     \begin{equation}
         \eta(\mathbf{X}) = \frac{H(\mathbf{X})}{\log_2(N)}
@@ -150,7 +150,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \subsection{Fuentes de Datos}
 
-        Para probar nuestra hipotesis de cómo la distribución de símbolos influye en la compresibilidad, trabajamos con tres textos con características muy distintas. El primero es una secuencia de ADN (\texttt{adn.txt}), que es el caso más sencillo: un alfabeto de solo 4 símbolos (adenina, citosina, guanina y timina, representados como `\texttt{a}', `\texttt{c}', `\texttt{g}' y `\texttt{t}').
+        Para probar nuestra hipotesis de cómo la distribución de símbolos influye en la compresibilidad, trabajamos con tres textos con características muy distintas. El primero es una secuencia de ADN (\texttt{adn.txt}), que es el caso más sencillo: un alfabeto de solo 4 símbolos (adenina, citosina, guanina y timina, representados como `\texttt{A}', `\texttt{C}', `\texttt{G}' y `\texttt{T}').
 
         En el otro extremo, tenemos un texto de lenguaje natural, un fragmento sobre mitología en \textit{español} (\texttt{mitologia.txt}). Aquí el alfabeto crece para incluir las 27 letras del español, números, signos de puntuación y espacios. 
 
@@ -161,7 +161,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
     \subsection{Modelo probabilístico de la Fuente}
 
 
-        El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este diccionario constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}. 
+        El objetivo en esta etapa es estimar una \textbf{función de masa de probabilidad} (\textbf{PMF}) de cada fuente de texto. El resultado de este paso es un conjunto de pares \( (s_i, p_i) \) que representan los símbolos y sus probabilidades de ocurrencia, es decir, su \textbf{probabilidad empírica} de aparición \( p(x) \). Este resultado constituye el modelo estadístico de la fuente, y es el insumo fundamental sobre el cual operará el algoritmo de \textbf{Huffman}. 
 
         En general, la probabilidad estimada del $i$-ésimo símbolo \( s_i \) con su frecuencia asociada $f_i$ se calcula como:
 
@@ -247,7 +247,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \subsection{Medidas de Desempeño y Análisis Cuantitativo}
 
-        Una vez que tenemos la codificación de Huffman generada para cada cadena $\mathbf{X}$ de $N$ caracteres $x_i$ únicos, con su respectiva distribución de frecuencias, necesitamos métricas concretas que nos permitan evaluar su efectividad. En la Introducción definimos formalmente cada una de estas medidas; ahora explicaremos cómo interpretarlas en el contexto práctico de nuestro análisis.
+        Una vez obtenida la codificación de Huffman para cada cierta cadena $\mathbf{X}$ de $N$ caracteres $x_i$ únicos, con su respectiva distribución de frecuencias, necesitamos métricas concretas que nos permitan evaluar su efectividad. En la Introducción definimos formalmente cada una de estas medidas; en esta sección desarrollamos su interpretación en el contexto práctico de nuestro análisis.
 
         \subsubsection*{Longitud Promedio de Codificación}
 
@@ -275,11 +275,9 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
         \subsubsection*{Entropía Normalizada}
 
-           El problema de la medida anterior es que se encuentra escalada respecto a la cantidad de símbolos únicos $(N)$ de la cadena, es por eso que a la hora de realizar comparaciones entre cadenas de diferentes $N$ es necesario utilizar la versión normalizada (Ecuación~\eqref{eq:norm_entropy}), donde $\eta \in [0,1]$ tal que en sus valores extremos $\eta=1$ evidencia una incertidumbre total o una distribución totalmente uniforme de los símbolos, mientras que en $\eta=0$ la cadena sería una repetición continua de un solo caracter.
+           El problema de la medida anterior es que se encuentra escalada respecto a la cantidad de símbolos únicos $(N)$ de la cadena, es por eso que a la hora de realizar comparaciones entre cadenas de diferentes $N$ es necesario utilizar la versión normalizada (Ecuación~\eqref{eq:norm_entropy}), donde $\eta \in [0,1]$ tal que para sus valores extremos, cuando $\eta=1$ evidencia una incertidumbre total o una distribución totalmente uniforme de los símbolos, mientras que en el caso de una $\eta=0$ la cadena sería una repetición continua de un solo caracter.
     
     \end{multicols}
-
-
 
 {\sectionrule}
 
@@ -289,6 +287,7 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
 \begin{multicols}{2}
 
+     En la Figura~\ref{fig:character_pmf} se encuentra representado el modelo probabilítico de cada una de las fuentes introducidas anteriormente. En principio, consideramos a un caracter mayúscula como equivalente con su versión minúscula de manera que, cómo fue mencionado, en casos como en el de lenguaje natural aportan mucha complejidad al algoritmo de codificación y su contribución de información es muy bajo, lo que estimamos que es lo óptimo para el objetivo de este trabajo.
    
     \begin{figure}[H]
         \centering
@@ -297,15 +296,15 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
         \label{fig:character_pmf}
     \end{figure}
 
-    En un primer vistazo al gráfico, notamos que el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen, lo que significa que $L = L_\text{unif}$. Cada uno de estos aparecen con una frecuencia muy cercana al 25\%.  
-    
-    Desde el punto de vista de la teoria de la informacion, una fuente con probabilidades equiprobables no contiene redundancia. En consecuencia, la codificación de Huffman no logra ninguna compresion resultando en una reduccion relativa de memoria nula, como se muestra en el cuadro \ref{tab:calcs}. La entropia normalizada corrobora lo mencionado observando que para este caso, con una precisión de 4 decimales es igual a 1. Como mencionamos en la sección anterior, gracias a este dato inferimos que la cadena tiene una distribución (casi) perfectamente uniforme de caracteres.
+    Observamos que en el tercer gráfico, el archivo \textit{adn.txt} muestra una distribucion completamente uniforme entre los cuatro simbolos que lo componen, lo que significaría que $L = L_\text{unif}$. Cada uno de estos aparecen con una frecuencia muy cercana al 25\%. Desde el punto de vista de la teoria de la informacion, una fuente con probabilidades equiprobables no contiene redundancia. En consecuencia, la codificación de Huffman no logra ninguna compresion resultando en una reduccion relativa de memoria nula, como se muestra en el Cuadro~\ref{tab:metrics}. La entropia normalizada corrobora lo mencionado observando que para este caso, con una precisión de 6 decimales es igual a 1. Como mencionamos en la sección anterior, gracias a este dato inferimos que la cadena tiene una distribución (casi) perfectamente uniforme de caracteres.
 
-    Por otro lado, el archivo mitología.txt muestra una distribución de frecuencias mucho más variada. El texto cuenta con 42 símbolos distintos, cuya entropía de 4.27 bits/símbolo se traduce en una longitud promedio muy cercana a dicho valor. Se observa cómo unas pocas letras concentran una gran cantidad de apariciones, lo cual es característico del lenguaje natural. El carácter más utilizado resulta ser el ``\_'' (espacio), en concordancia con la regla gramatical que establece su uso para separar palabras. Esta redundancia permite al algoritmo de Huffman asignar códigos más cortos a los símbolos de mayor frecuencia. Gracias a ello, se obtiene una longitud promedio de 4.27 bits/símbolo y una reducción de memoria del 28.31\%. En este caso, puede apreciarse claramente cómo la redundancia inherente al lenguaje natural puede aprovecharse para comprimir información de manera eficiente. Su entropía normalizada ayuda a confirmar esta observación, ya que al situarse debajo del valor máximo, evidencia que el texto no es completamente aleatorio sino que presenta patrones estadísticos predecibles en la aparición de ciertos caracteres. Estos patrones (como la alta frecuencia de vocales, espacios y algunas letras) introducen una estructura que reduce la incertidumbre promedio por símbolo. Podemos afirmar que su menor entropía es precisamente lo que hace posible una compresión efectiva.
+    Por otro lado, el archivo mitología.txt muestra una distribución de frecuencias mucho más variada. El texto cuenta con poco más de 10 veces las cantidad de símbolos únicos del texto anterior, conllevando una entropía (normalizada) ya algo alejada a la de la distribución uniforme, indicando efectivamente cierta redundancia. De esto destacamos que su longitud promedio es muy cercana a su entropía, es decir, cercana a su mínimo teórico. Esto último nos da la idea de que el algoritmo resulta también muy eficiente aunque no perfecto. Además, notamos como unas pocas letras concentran una gran cantidad de apariciones, lo cual es característico del lenguaje natural, y su carácter más frecuente siendo el ``\_'' (espacio) seguido de las vocales, en concordancia con la estructura gramatical del español. Esta disminución de la incertidumbre permite al algoritmo de Huffman asignar códigos más cortos a los símbolos de mayor repetición, consiguiendo un porcentaje importante de reducción en memoria. 
+    
+    En este caso, puede apreciarse claramente cómo la redundancia inherente al lenguaje natural puede aprovecharse para comprimir información de manera eficiente. Su entropía normalizada ayuda a confirmar esta observación, ya que al situarse debajo del valor máximo, evidencia que el texto no es completamente aleatorio sino que presenta patrones estadísticos predecibles en la aparición de ciertos caracteres. Estos patrones (como la alta frecuencia de vocales, espacios y algunas letras) introducen una estructura que reduce la incertidumbre promedio por símbolo. Podemos afirmar que su menor entropía es precisamente lo que hace posible una compresión efectiva.
 
     \end{multicols}
 
-        \begin{table}[H]
+    \begin{table}[H]
         \centering
         \footnotesize
         \begin{tabular}{lllllll}
@@ -333,27 +332,71 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
             {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
             {\tiny$R$ [\%]} \\
             \midrule
-            {\smaller\textbf{adn.txt}} & 1.9999 & 1.0000 & 4 & 2.0000 & 2 & 0.0000 \\
+            {\smaller\textbf{adn.txt}}& 1.999999 & 1.000000 & 4 & 2.000000 & 2 & 0.000000 \\
             \midrule
-            {\smaller\textbf{mitología.txt}} & 4.2685 & 0.7916 & 42 & 4.3013 & 6 & 28.3112 \\
+            {\smaller\textbf{mitología.txt}} & 4.250355 & 0.793339 & 41 & 4.284386 & 6 & 28.593563 \\
             \midrule
-            {\smaller\textbf{tabla.txt}} & 3.4668 & 0.6471 & 41 & 3.5161 & 6 & 41.3978 \\
+            {\smaller\textbf{tabla.txt}} & 3.399142 & 0.638705 & 40 & 3.453106 & 6 & 42.448226 \\
             \bottomrule
         \end{tabular}
         \caption{Resumen de los cálculos de las medidas mencionadas en la sección anterior realizados para los textos de ejemplo}
-        \label{tab:calcs}
+        \label{tab:metrics}
     \end{table}
 
     \begin{multicols}{2}
         
-    Finalmente,  el archivo tabla.txt, al corresponder a una tabla de valores, presenta una distribucion dominada por caracteres numericos y signos de puntuacion. A diferencia del texto anterior, esta distribucion no obedece patrones linguisticos, sino una organizacion propia de los datos estructurados. En consecuencia, unos pocos simbolos concentran la mayor parte de las apariciones, generando una fuerte desigualdad en las probabliidades y por lo tanto una entropia considerablemente menor (Observable al comparar entropias normalizadas). Este comportamiento se traduce en la mayor compresibilidad de los tres casos analisados, con una reduccion de memoria del 41.30\%. La longitud promedio de 3.46 bits/simbolo evidencia una fuente altamente redundante desde el punto de vista estadistico. En otras palabras, el algoritmo de Huffman puede asignar codigos especialmente cortos a los caracteres dominantes y alcanzar asi la maxima eficiencia de codificacion observada.
-
+    Finalmente, el archivo tabla.txt, al corresponder a una tabla de valores, presenta una distribucion dominada por caracteres numericos y signos de puntuacion. A diferencia del texto anterior, esta distribucion no obedece patrones linguisticos sino una organizacion propia de los datos estructurados. En consecuencia, unos pocos simbolos concentran la mayor parte de las apariciones, generando una fuerte desigualdad en las probabliidades y por lo tanto una entropia considerablemente menor (Observable al comparar entropias normalizadas) a pesar de contener (casi) la misma cardinalidad en sus alfabetos. Este comportamiento se traduce en la mayor compresibilidad de los tres casos analizados, con una reducción de memoria mayor al 40\%. La longitud promedio tendiendo al valor de la entropía, ambos menores al texto anterior, evidencia una fuente altamente redundante desde el punto de vista estadistico. En otras palabras, el algoritmo de Huffman puede asignar codigos especialmente cortos a los caracteres dominantes y alcanzar asi la maxima eficiencia de codificacion observada.
+        
     En conjunto, estas diferencias exhiben como las distribuciones de frecuencia estan fuertemente determinados por la naturaleza de la informacion influyendo directamente en su compresibilidad.
 
+    Así como tomamos a una minúscula y una mayúscula como fuente de la misma información, otra consideración que podría surgir sería tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información). E ignorar caracteres de puntuación como $\left\{\text{`.', `,', `:', `;'}, \dots \right\}$. Esto es de interés en fuentes de lenguaje natural, en donde en muchos casos la ausencia de una acentuación puede dificultar la compresión pero no la imposibilita, y usualmente con el contexto se puede decifrar facilmente la intención trasmitida. La misma acción sobre los caracteres de puntuación es ciertamente controversial, en donde una sola coma puede cambiar totalmente esa intención.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.45\textwidth]{figures/character_strict_pmf.png}
+        \caption{Función de masa de probabilidad de los caracteres de `mitología.txt' (versión ``restringida'')}
+        \label{fig:character_strict_pmf}
+    \end{figure}
+
+    Con el objetivo de una \textbf{comparación extremista}, realizamos los mismos cálculos para una versión ``restringida'' de `mitología.txt' en donde la puntuación es totalmente ignorada y los caracteres con diacríticos son equivalentes al caracter sin este. En la Figura~\ref{fig:character_strict_pmf} se encuentra la representación gráfica de la PMF de esta versión y en el Cuadro~\ref{tab:restringed_metrics} un resumen de las métricas para la misma.
+
+    \begin{table}[H]
+        \centering
+        \footnotesize
+        \begin{tabular}{cccccc}
+            \toprule
+            $\boldsymbol{H}$ & 
+            $\boldsymbol{\eta}$ & 
+            $\boldsymbol{\#\Sigma}$ & 
+            $\boldsymbol{L}$ & 
+            $\boldsymbol{L_{\text{unif}}}$ & 
+            $\boldsymbol{R}$ (\%)  
+            \\
+            \midrule
+            3.93666 & 0.82792 & 27 & 3.92626 & 5 & 21.47475 \\
+            \bottomrule
+        \end{tabular}
+        \caption{Métricas de la versión ``restringida'' de `mitología.txt'}
+        \label{tab:restringed_metrics}
+    \end{table}
+
+    En esta modificación, los bits promedio de codificación por caracter bajan en casi 1.5 bits implicando una codificación más eficiente. La contraparte es que como de alguna manera de extraen los caracteres en general de menor frecuencia, se tiene una mayor redundancia. Se asemeja más a una cadena uniforme.
+
+    Un ejemplo de las consecuencias que conlleva una práctica del estilo es con el siguiente fragmento del texto
+    
+    \begin{quoting}
+        \centering
+        \small
+        (\dots) la mitologia no ha desaparecido se ha transfigurado las narrativas contemporáneas desde las sagas cinematograficas hasta los universos de comic reconfiguran arquetipos antiguos en tramas actuales
+    \end{quoting}
+    
+    Sin los signos de puntuación necesarios, al decodificar el texto se podría malinterpretar qué sujeto se refieren algunos verbos, como el ejemplo de ``se ha trasnfigurado''.
 
 \end{multicols}
 
-{\sectionrule}
+\vfill
+
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusión %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -361,73 +404,13 @@ Este trabajo investiga la relación fundamental entre la \textit{distribución p
 
     \begin{multicols}{2}
 
+    Del análisis pudimos observar que la naturaleza del contenido tiene una fuerte correlación con su compresibilidad. Tambien podemos observar como el conocer en profundidad el texto a codificar permite realizar modificaciones al algoritmo para una mayor ventaja. Aun teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de informacion}, esto no significa necesariamente que el mensaje reconstruido sea el mismo.
 
-    Del analisis pudimos observar que la naturaleza del contenido tiene una fuerte correlacion con su compresibilidad. Tambien podemos observar como el conocer en profundidad el texto a codificar permite realizar modificaciones al algoritmo para una mayor ventaja. Aun teniendo en cuenta que cuando queremos aplicar Huffman \textbf{no se debe perder absolutamente nada de informacion}, esto no significa necesariamente que el mensaje reconstruido sea el mismo. El mejor ejemplo es el alplicado en este informe de tomar la decision de no diferenciar mayusculas de minusculas. En un texto natural es posible identificarlas con un progrma simple que las reemplaze luego de signos de puntuacion o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayusculas podrian ser una componente clave que cambie el significado del mensaje. 
-    Así como tomamos a una minúscula y una mayúscula como fuente de la misma información, otra consideración que podría surgir es ser tomar a cualquiera de las variantes de cada caracter con cualquiera sea el tipo de diacrítico que posee como una misma. Por ejemplo diríamos que \texttt{a} $\equiv \left\{\texttt{a, á, à, â, ä}, \dots\right\}$ (equivalentes en términos de información). E ignorar caracteres de puntuación como $\left\{\text{``.'', ``,'', ``:'', ``;''}, \dots \right\}$. En muchos casos la ausencia de una acentuación puede dificultar la compresión pero no la imposibilita, y usualmente con el contexto se puede decifrar facilmente la intención trasmitida. Otro caso es el de la puntuación, en donde una sola coma puede cambiar totalmente esa intención por lo que no es posible realizar este arrelgo.
-
-    Con el objetivo de una comparación extremista, realizamos los mismos cálculos para las versiones ``restringidas'' de los textos en los que la puntuación es ignorada y los caracteres con diacríticos son equivalentes al caracter sin este. En la Figura~\ref{fig:character_strict_pmf} se encuentra la representación gráfica de la PMF de esta versión.
-
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.45\textwidth]{figures/character_strict_pmf.png}
-        \caption{Función de masa de probabilidad de los caracteres de cada uno de los textos de ejemplo (versión ``restringida'')}
-        \label{fig:character_strict_pmf}
-    \end{figure}
-
-\end{multicols}
-        \begin{table}[H]
-        \centering
-        \footnotesize
-        \begin{tabular}{lllllll}
-            \toprule
-            & 
-            \textbf{Entropía} & 
-            \textbf{Entropía} & 
-            \textbf{Símbolos} & 
-            \textbf{Longitud} & 
-            \textbf{Longitud} & 
-            \textbf{Reducción}  
-            \\
-            & 
-            & 
-            \textbf{Normalizada} & 
-            \textbf{Únicos} & 
-            \textbf{Promedio} & 
-            \textbf{Uniforme Mínima}  & 
-            \textbf{de Memoria} \\ 
-            & 
-            {\tiny$H$ [bits/símbolo]} & 
-            {\tiny$\eta \in [0,1]$} & 
-            {\tiny$N$ [cantidad]} & 
-            {\tiny$L$ [bits/símbolo]} & 
-            {\tiny$L_{\text{unif}}$ [bits/símbolo]} & 
-            {\tiny$R$ [\%]} \\
-            \midrule
-            {\smaller\textbf{adn.txt}} & 1.999999 & 1.000000 & 4 & 2.000000 & 2 & 0.000000 \\
-            \midrule
-            {\smaller\textbf{mitología.txt}} & 3.517115 & 0.748252 & 26 & 3.302169 & 5 & 33.956622 \\
-            \midrule
-            {\smaller\textbf{tabla.txt}} & 2.546965 & 0.492650 & 36 & 2.265255 & 6 & 62.245757 \\
-            \bottomrule
-        \end{tabular}
-        \caption{Resumen de los cálculos de las medidas para los textos de ejemplo (versión ``restringida'')}
-        \label{tab:calcs_strict}
-    \end{table}
-
-
-
-
-
-
-\begin{multicols}{2}
+    El mejor ejemplo es el aplicado en este informe de tomar la decision de no diferenciar mayusculas de minusculas. En un texto natural es posible identificarlas con un programa simple que las reemplace luego de signos de puntuación o para sustantivos propios. Notar que esto solo es aplicable para textos de lenguaje natural ya que en otro caso toda las mayúsculas podrían ser una componente clave que cambie el significado del mensaje. 
     
-Nuestro experimento con versiones “restringidas” de los textos muestra que eliminar ciertos caracteres puede tener efectos adversos incluso en los casos donde parecería inofensivo. En mitología.txt, la supresión de signos como las comas y los puntos altera la estructura del lenguaje y modifica el sentido de las oraciones, por lo que la cadena resultante deja de representar fielmente el texto original. De forma similar, en tabla.txt la eliminación de estos mismos caracteres borra la referencia decimal y distorsiona el valor de los números, haciendo que los datos pierdan precisión.
-Este resultado evidencia como un carácter que parece “redundante” en un cierto contexto puede ser esencial para conservar la precisión en un texto de otro tipo.
-   
-En resumen, la compresibilidad no es una propiedad intrínseca de un algoritmo sino una interacción entre éste y la estructura de los datos.  Las fuentes uniformes son incomprensibles, los textos naturales contienen cierta redundancia explotable y los datos altamente estructurados pueden compactarse de manera notable.  Además, pequeñas transformaciones en la representación —como unificar letras mayúsculas y minúsculas o ignorar acentos— permiten aumentar la eficiencia cuando se conoce el dominio de aplicación y se garantiza que el significado no se ve comprometido.  Estas consideraciones subrayan la importancia de combinar técnicas de teoría de la información con conocimiento contextual para desarrollar métodos de compresión realmente adaptados a cada tipo de fuente.
-
-
-
+    Nuestro experimento con versiones ``restringida'' de los textos muestra que eliminar ciertos caracteres puede tener efectos adversos incluso en los casos donde parecería inofensivo. En mitología.txt, la supresión de signos como las comas y los puntos altera la estructura del lenguaje y modifica el sentido de las oraciones, por lo que la cadena resultante deja de representar fielmente el texto original. De forma similar, en tabla.txt la eliminación de estos mismos caracteres borraría la referencia decimal y distorsionaría el valor de los números, haciendo que los datos pierdan precisión. Este resultado evidencia como \textit{un carácter que parece ``redundante'' en un contexto estadístico puede ser esencial para conservar la precisión gramatical}.
+    
+    En resumen, la compresibilidad no es una propiedad intrínseca de un algoritmo sino una interacción entre éste y la estructura de los datos.  Las fuentes uniformes son incomprensibles, los textos naturales contienen cierta redundancia explotable y los datos altamente estructurados pueden compactarse de manera notable. Además, pequeñas transformaciones en la representación —como unificar letras mayúsculas y minúsculas o ignorar acentos— permiten aumentar la eficiencia cuando se conoce el dominio de aplicación y se garantiza que el significado no se ve comprometido. Estas consideraciones subrayan la importancia de combinar técnicas de teoría de la información con conocimiento contextual para desarrollar métodos de compresión realmente adaptados a cada tipo de fuente.
 
     \end{multicols}
 
